@@ -139,7 +139,7 @@ public enum Audit {
             findings.append(make(
                 "R1.UIScreenMain", .likelyBug, file, lineNumber,
                 "UIScreen.main does not track the window's screen.",
-                "Use the window scene's screen; use traitCollection.displayScale for scale."
+                "Use DuoScreen for the window scene's screen; use traitCollection.displayScale for scale."
             ))
         }
         if line.contains("safeAreaInsets"),
@@ -147,21 +147,21 @@ public enum Audit {
             findings.append(make(
                 "R1.SafeAreaTimesTwo", .likelyBug, file, lineNumber,
                 "safeAreaInsets are combined symmetrically.",
-                "Keep top and bottom insets separate; Duo safe area is asymmetric."
+                "Use DuoSafeArea; keep top and bottom insets separate."
             ))
         }
         if line.contains(/CGRect\s*\(\s*x:\s*-?\d+.*width:\s*-?\d+.*height:\s*-?\d+/) {
             findings.append(make(
                 "R1.FixedCGRect", .likelyBug, file, lineNumber,
                 "Frame uses a fixed CGRect.",
-                "Size from the container, not a fixed frame."
+                "Size from the container; use DuoDisplayPreset sizes in tests."
             ))
         }
         if line.contains("width"), line.contains(/\b(320|375|390|393|402|428|430)(\.0)?\b/) {
             findings.append(make(
                 "R1.HardcodedPhoneWidth", .likelyBug, file, lineNumber,
                 "Width is a hardcoded phone point value.",
-                "Do not pin width to a phone point value."
+                "Use container width or DuoDisplayPreset, not a phone point value."
             ))
         }
         if singleWindow(line) {
@@ -175,7 +175,7 @@ public enum Audit {
             findings.append(make(
                 "R3.UserInterfaceIdiom", .likelyBug, file, lineNumber,
                 "Layout branches on userInterfaceIdiom.",
-                "Branch on container size, not phone/pad idiom."
+                "Use DuoSizeGate on container size, not phone/pad idiom."
             ))
         }
         if orientation(line) {

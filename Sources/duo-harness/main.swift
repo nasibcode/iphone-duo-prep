@@ -21,6 +21,8 @@ enum DuoHarnessMain {
             }
         case "audit":
             runAudit(Array(args.dropFirst()))
+        case "autofix":
+            runAutofix(Array(args.dropFirst()))
         case "help", "--help", "-h", nil:
             print(usage)
         default:
@@ -36,6 +38,7 @@ enum DuoHarnessMain {
       duo-harness version
       duo-harness sdk-check [--warn]
       duo-harness audit <path> [--format json|markdown]
+      duo-harness autofix <path>
     """
 
     private static func runAudit(_ args: [String]) {
@@ -69,6 +72,18 @@ enum DuoHarnessMain {
         } else {
             print(Audit.markdown(report))
         }
+    }
+
+    private static func runAutofix(_ args: [String]) {
+        guard args.count == 1, let path = args.first, !path.hasPrefix("-") else { failUsage() }
+        let result: Autofix.Result
+        do {
+            result = try Autofix.run(root: URL(fileURLWithPath: path))
+        } catch {
+            FileHandle.standardError.write(Data("autofix: cannot read \(path)\n".utf8))
+            exit(1)
+        }
+        print("autofix: \(result.filesChanged) file(s), \(result.replacements) replacement(s)")
     }
 
     private static func failUsage() -> Never {

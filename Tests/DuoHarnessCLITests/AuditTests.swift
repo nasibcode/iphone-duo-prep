@@ -139,6 +139,23 @@ struct AuditTests {
         }
         #expect(!markdown.contains("## product-decision"))
         #expect(!markdown.contains("## enhancement"))
+        #expect(report.findings.contains { $0.id == "R1.UIScreenMain" && $0.suggestion.contains("DuoScreen") })
+        #expect(report.findings.contains { $0.id == "R1.SafeAreaTimesTwo" && $0.suggestion.contains("DuoSafeArea") })
+        #expect(report.findings.contains { $0.id == "R3.UserInterfaceIdiom" && $0.suggestion.contains("DuoSizeGate") })
+    }
+
+    @Test func autofixReplacesMainScale() throws {
+        let dir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let file = dir.appendingPathComponent("Scale.swift")
+        try "let s = UIScreen.main.scale\n".write(to: file, atomically: true, encoding: .utf8)
+        let result = try Autofix.run(root: dir)
+        #expect(result.filesChanged == 1)
+        #expect(result.replacements == 1)
+        let text = try String(contentsOf: file, encoding: .utf8)
+        #expect(text.contains("traitCollection.displayScale"))
+        #expect(!text.contains("UIScreen.main.scale"))
     }
 
     private func scan(name: String, _ source: String) throws -> [Finding] {

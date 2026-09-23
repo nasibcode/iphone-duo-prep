@@ -38,7 +38,7 @@
       "line" : 6,
       "message" : "UIScreen.main does not track the window's screen.",
       "severity" : "likely-bug",
-      "suggestion" : "Use the window scene's screen; use traitCollection.displayScale for scale."
+      "suggestion" : "Use DuoScreen for the window scene's screen; use traitCollection.displayScale for scale."
     },
     {
       "file" : "VictimViewController.swift",
@@ -46,7 +46,7 @@
       "line" : 7,
       "message" : "safeAreaInsets are combined symmetrically.",
       "severity" : "likely-bug",
-      "suggestion" : "Keep top and bottom insets separate; Duo safe area is asymmetric."
+      "suggestion" : "Use DuoSafeArea; keep top and bottom insets separate."
     },
     {
       "file" : "VictimViewController.swift",
@@ -54,7 +54,7 @@
       "line" : 8,
       "message" : "Frame uses a fixed CGRect.",
       "severity" : "likely-bug",
-      "suggestion" : "Size from the container, not a fixed frame."
+      "suggestion" : "Size from the container; use DuoDisplayPreset sizes in tests."
     },
     {
       "file" : "VictimViewController.swift",
@@ -62,7 +62,7 @@
       "line" : 9,
       "message" : "Width is a hardcoded phone point value.",
       "severity" : "likely-bug",
-      "suggestion" : "Do not pin width to a phone point value."
+      "suggestion" : "Use container width or DuoDisplayPreset, not a phone point value."
     },
     {
       "file" : "VictimViewController.swift",
@@ -70,7 +70,7 @@
       "line" : 10,
       "message" : "Layout branches on userInterfaceIdiom.",
       "severity" : "likely-bug",
-      "suggestion" : "Branch on container size, not phone/pad idiom."
+      "suggestion" : "Use DuoSizeGate on container size, not phone/pad idiom."
     },
     {
       "file" : "VictimViewController.swift",
