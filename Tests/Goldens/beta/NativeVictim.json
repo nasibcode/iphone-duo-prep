@@ -1,0 +1,84 @@
+{
+  "findings" : [
+    {
+      "file" : "Info.plist",
+      "id" : "R2.MissingSceneManifest",
+      "line" : 1,
+      "message" : "Info.plist has no UIApplicationSceneManifest.",
+      "severity" : "blocker",
+      "suggestion" : "Add UIApplicationSceneManifest."
+    },
+    {
+      "file" : "Info.plist",
+      "id" : "R2.UIRequiresFullScreen",
+      "line" : 1,
+      "message" : "UIRequiresFullScreen is set.",
+      "severity" : "blocker",
+      "suggestion" : "Remove it so Split View can run."
+    },
+    {
+      "file" : "AppDelegate.swift",
+      "id" : "R2.SingleWindow",
+      "line" : 8,
+      "message" : "Code assumes a single window.",
+      "severity" : "likely-bug",
+      "suggestion" : "Use the scene window; do not assume one UIWindow."
+    },
+    {
+      "file" : "Base.lproj/Main.storyboard",
+      "id" : "R1.StoryboardSizeClass",
+      "line" : 1,
+      "message" : "Storyboard has no size-class variation.",
+      "severity" : "likely-bug",
+      "suggestion" : "Add widthClass / heightClass variations."
+    },
+    {
+      "file" : "VictimViewController.swift",
+      "id" : "R1.UIScreenMain",
+      "line" : 6,
+      "message" : "UIScreen.main does not track the window's screen.",
+      "severity" : "likely-bug",
+      "suggestion" : "Use the window scene's screen; use traitCollection.displayScale for scale."
+    },
+    {
+      "file" : "VictimViewController.swift",
+      "id" : "R1.SafeAreaTimesTwo",
+      "line" : 7,
+      "message" : "safeAreaInsets are combined symmetrically.",
+      "severity" : "likely-bug",
+      "suggestion" : "Keep top and bottom insets separate; Duo safe area is asymmetric."
+    },
+    {
+      "file" : "VictimViewController.swift",
+      "id" : "R1.FixedCGRect",
+      "line" : 8,
+      "message" : "Frame uses a fixed CGRect.",
+      "severity" : "likely-bug",
+      "suggestion" : "Size from the container, not a fixed frame."
+    },
+    {
+      "file" : "VictimViewController.swift",
+      "id" : "R1.HardcodedPhoneWidth",
+      "line" : 9,
+      "message" : "Width is a hardcoded phone point value.",
+      "severity" : "likely-bug",
+      "suggestion" : "Do not pin width to a phone point value."
+    },
+    {
+      "file" : "VictimViewController.swift",
+      "id" : "R3.UserInterfaceIdiom",
+      "line" : 10,
+      "message" : "Layout branches on userInterfaceIdiom.",
+      "severity" : "likely-bug",
+      "suggestion" : "Branch on container size, not phone/pad idiom."
+    },
+    {
+      "file" : "VictimViewController.swift",
+      "id" : "R3.OrientationLock",
+      "line" : 11,
+      "message" : "Orientation is locked or read from the device.",
+      "severity" : "likely-bug",
+      "suggestion" : "Lay out for the current size; the inner display can ignore orientation locks."
+    }
+  ]
+}

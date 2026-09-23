@@ -20,10 +20,7 @@ enum DuoHarnessMain {
                 if !warnOnly { exit(1) }
             }
         case "audit":
-            FileHandle.standardError.write(Data(
-                "audit is not implemented yet (Phase A1). It will score SampleApps/NativeVictim once that app lands.\n".utf8
-            ))
-            exit(1)
+            runAudit(Array(args.dropFirst()))
         case "help", "--help", "-h", nil:
             print(usage)
         default:
@@ -38,6 +35,44 @@ enum DuoHarnessMain {
     Usage:
       duo-harness version
       duo-harness sdk-check [--warn]
-      duo-harness audit
+      duo-harness audit <path> [--format json|markdown]
     """
+
+    private static func runAudit(_ args: [String]) {
+        var format = "markdown"
+        var path: String?
+        var index = 0
+        while index < args.count {
+            let arg = args[index]
+            if arg == "--format" {
+                guard index + 1 < args.count else { failUsage() }
+                format = args[index + 1]
+                index += 2
+                continue
+            }
+            if arg.hasPrefix("-") { failUsage() }
+            guard path == nil else { failUsage() }
+            path = arg
+            index += 1
+        }
+        guard let path, format == "json" || format == "markdown" else { failUsage() }
+
+        let report: AuditReport
+        do {
+            report = try Audit.scan(root: URL(fileURLWithPath: path))
+        } catch {
+            FileHandle.standardError.write(Data("audit: cannot read \(path)\n".utf8))
+            exit(1)
+        }
+        if format == "json" {
+            print(Audit.jsonString(report), terminator: "")
+        } else {
+            print(Audit.markdown(report))
+        }
+    }
+
+    private static func failUsage() -> Never {
+        FileHandle.standardError.write(Data((usage + "\n").utf8))
+        exit(64)
+    }
 }

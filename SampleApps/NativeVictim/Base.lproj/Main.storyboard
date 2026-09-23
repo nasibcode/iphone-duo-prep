@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0">
+    <scenes>
+        <scene sceneID="s1">
+            <objects>
+                <viewController id="vc">
+                    <view key="view" contentMode="scaleToFill" id="v">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                    </view>
+                </viewController>
+            </objects>
+        </scene>
+    </scenes>
+</document>

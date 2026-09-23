@@ -8,4 +8,4 @@ Canonical plan, analysis, and Mac setup for **iPhone Duo Harness** (SPM product 
 | [analysis.md](./analysis.md) | Feasibility, automation boundary, recommended SPM + CLI shape |
 | [plan.md](./plan.md) | Locked-scope delivery plan (phases A0–A7, targets, metrics) |
 
-**Status:** A0 scaffold — library / testing / CLI stubs. Next: A1 audit rules + NativeVictim.
+**Status:** A1 audit — `swift run duo-harness audit SampleApps/NativeVictim`.
