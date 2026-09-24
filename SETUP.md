@@ -1,5 +1,7 @@
 # Setup — iPhone Duo Harness (Mac)
 
+<!-- Phase A0 -->
+
 Pin: **Xcode 27.1 beta** (see [TOOLCHAIN.md](./TOOLCHAIN.md)).
 
 ## Prerequisites
@@ -20,9 +22,17 @@ swift build
 swift test
 swift run duo-harness version
 swift run duo-harness sdk-check
+# Phase A1
+swift run duo-harness audit SampleApps/NativeVictim
+# Phase A2
+swift run duo-harness autofix SampleApps/NativeVictim
+# Phase A6
+swift run duo-harness audit SampleApps/NativeVictim --semantic --fail-on blocker; echo exit:$?
+swift run duo-harness autofix SampleApps/NativeVictim --checklist
+swift run duo-harness matrix
+# Phase A7
+swift run duo-harness golden-diff Tests/Goldens/beta/NativeVictim.json Tests/Goldens/gm/NativeVictim.json
 ```
-
-`audit` is Phase A1 (not implemented yet) — exits with a stub message until NativeVictim lands.
 
 ## Docs in this folder
 
@@ -31,6 +41,7 @@ swift run duo-harness sdk-check
 | [analysis.md](./analysis.md) | Feasibility / automation boundary |
 | [plan.md](./plan.md) | Phased delivery plan (A0–A7) |
 | [README.md](./README.md) | Doc index |
+| [Docs/RULES.md](./Docs/RULES.md) | Rule catalog |
 
 ## Add as a dependency
 
@@ -41,15 +52,4 @@ swift run duo-harness sdk-check
 ```swift
 .product(name: "DuoHarness", package: "duo-harness")
 .product(name: "DuoHarnessTesting", package: "duo-harness")
-```
-
-## If this tree arrived via tarball
-
-See Project Context media `duo-harness-scaffold.tar.gz`, or unpack over a LICENSE-only clone:
-
-```bash
-tar -xzf duo-harness-scaffold.tar.gz
-git add -A
-git commit -m "Scaffold iPhone Duo Harness SPM (DuoHarness)"
-git push
 ```

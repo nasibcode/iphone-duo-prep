@@ -1,6 +1,7 @@
 import DuoHarnessTesting
 import Testing
 
+// Phase A2 presets; Phase A6 matrix.
 struct DuoHarnessTestingTests {
     @Test func presetsHaveDistinctPositiveSizes() {
         let sizes = DuoDisplayPreset.allCases.map(\.size)
@@ -13,5 +14,14 @@ struct DuoHarnessTestingTests {
         #expect(DuoDisplayPreset.duoOuterPortrait.size.width == 402)
         #expect(DuoDisplayPreset.duoInnerRegular.size.width == 740)
         #expect(DuoDisplayPreset.duoSplitHalf.size.width == 370)
+    }
+
+    @Test func uiTestMatrixCoversAllPresets() {
+        #expect(DuoUITestMatrix.entries.count == DuoDisplayPreset.allCases.count)
+        #expect(DuoUITestMatrix.argumentLines().count == 3)
+        let table = DuoUITestMatrix.markdownTable()
+        #expect(table.contains("duoOuterPortrait"))
+        #expect(table.contains("duoInnerRegular"))
+        #expect(table.contains("duoSplitHalf"))
     }
 }

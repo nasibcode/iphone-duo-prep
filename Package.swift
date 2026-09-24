@@ -1,4 +1,5 @@
 // swift-tools-version: 6.2
+// Phase A0 — SPM multi-target spine (DuoHarness / Testing / CLI / NativeHost).
 
 import PackageDescription
 
@@ -15,15 +16,18 @@ let package = Package(
         .executable(name: "duo-harness", targets: ["duo-harness"]),
     ],
     targets: [
-        .target(name: "DuoHarness"),
-        .target(name: "DuoHarnessTesting"),
+        .target(name: "DuoHarness"), // Phase A2 + A3
+        .target(name: "DuoHarnessTesting"), // Phase A2 + A6 matrix
         .target(
-            name: "NativeHost",
+            name: "NativeHost", // Phase A2/A3/A4 demos
             dependencies: ["DuoHarness", "DuoHarnessTesting"],
             path: "SampleApps/NativeHost"
         ),
-        .target(name: "DuoHarnessCLI", dependencies: ["DuoHarness"]),
-        .executableTarget(name: "duo-harness", dependencies: ["DuoHarnessCLI"]),
+        .target(name: "DuoHarnessCLI", dependencies: ["DuoHarness"]), // Phase A1–A7 CLI
+        .executableTarget(
+            name: "duo-harness",
+            dependencies: ["DuoHarnessCLI", "DuoHarnessTesting"] // A6 matrix subcommand
+        ),
         .testTarget(name: "DuoHarnessTests", dependencies: ["DuoHarness"]),
         .testTarget(name: "DuoHarnessTestingTests", dependencies: ["DuoHarnessTesting"]),
         .testTarget(name: "DuoHarnessCLITests", dependencies: ["DuoHarnessCLI"]),
