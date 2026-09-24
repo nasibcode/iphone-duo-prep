@@ -34,6 +34,11 @@ public enum NativeHost {
         let arrangement = DuoArrangement.splitHalf(container: DuoDisplayPreset.duoInnerRegular.size)
         return (arrangement, DuoSceneSession.activateOuterIfAvailable())
     }
+
+    /// Opt-in camera/outer scaffold path (always false until DuoFeatureGate flips).
+    public static func cameraOuterScaffoldDemo() -> (Bool, Bool) {
+        (DuoCameraDirection.facingUserForCurrentUI, DuoOuterAccessory.registerPreviewAccessoryIfAvailable())
+    }
 }
 
 #if canImport(UIKit)

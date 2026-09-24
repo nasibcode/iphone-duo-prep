@@ -199,6 +199,20 @@ public enum Audit {
                 "Observe via DuoHinge; see Templates/Arrangement/."
             ))
         }
+        if frontCameraAsUser(line) {
+            findings.append(make(
+                "R5.FrontCameraAsUser", .productDecision, file, lineNumber,
+                "Front camera is assumed to face the user of this UI.",
+                "Use DuoCameraDirection; see Templates/Camera/ and Docs/CAMERA.md."
+            ))
+        }
+        if captureWithoutOuterAccessory(line) {
+            findings.append(make(
+                "R5.CaptureWithoutOuterAccessory", .productDecision, file, lineNumber,
+                "Capture/preview mentions outer display without accessory scaffolding.",
+                "Use DuoOuterAccessory; see Templates/OuterDisplay/ and Docs/CAMERA.md."
+            ))
+        }
         return findings
     }
 
@@ -215,6 +229,23 @@ public enum Audit {
             || line.contains("partialFold")
             || line.contains("standingPose")
         return pose && !line.contains("DuoHinge")
+    }
+
+    private static func frontCameraAsUser(_ line: String) -> Bool {
+        let front =
+            line.contains("AVCaptureDevice.Position.front")
+            || line.contains("position = .front")
+            || line.contains("frontCamera")
+        return front && !line.contains("DuoCameraDirection")
+    }
+
+    private static func captureWithoutOuterAccessory(_ line: String) -> Bool {
+        let capture =
+            line.contains("AVCaptureSession")
+            || line.contains("videoPreviewLayer")
+            || line.contains("startRunning")
+        let outer = line.contains("outer") || line.contains("OuterDisplay")
+        return capture && outer && !line.contains("DuoOuterAccessory")
     }
 
     private static func singleWindow(_ line: String) -> Bool {

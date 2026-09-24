@@ -13,5 +13,8 @@ struct NativeHostTests {
         let (arrangement, outer) = NativeHost.arrangementOuterDemo()
         #expect(arrangement.primary.width == 370)
         #expect(!outer)
+        let (facesUser, accessory) = NativeHost.cameraOuterScaffoldDemo()
+        #expect(!facesUser)
+        #expect(!accessory)
     }
 }

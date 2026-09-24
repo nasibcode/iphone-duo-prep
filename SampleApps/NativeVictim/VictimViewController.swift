@@ -11,6 +11,8 @@ final class VictimViewController: UIViewController {
         if UIDevice.current.orientation == .portrait {}
         UIToolbar().frame = view.bounds
         _ = foldState
-        _ = (screen, pad)
+        let position = AVCaptureDevice.Position.front
+        AVCaptureSession().startRunning() // outer preview without accessory
+        _ = (screen, pad, position)
     }
 }

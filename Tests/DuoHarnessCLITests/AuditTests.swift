@@ -14,10 +14,12 @@ struct AuditTests {
         ("R3.OrientationLock", "if UIDevice.current.orientation == .portrait {}\n"),
         ("R4.CustomChromeNoReserved", "UIToolbar().frame = view.bounds\n"),
         ("R4.MissingHingeHook", "let a = hingeAngle\n"),
+        ("R5.FrontCameraAsUser", "let p = AVCaptureDevice.Position.front\n"),
+        ("R5.CaptureWithoutOuterAccessory", "AVCaptureSession().startRunning() // outer\n"),
     ])
     func lineRule(id: String, source: String) throws {
         let findings = try scan(name: "Fixture.swift", source)
-        let severity: Severity = id.hasPrefix("R4.") ? .productDecision : .likelyBug
+        let severity: Severity = (id.hasPrefix("R4.") || id.hasPrefix("R5.")) ? .productDecision : .likelyBug
         #expect(findings.contains { $0.id == id && $0.severity == severity })
     }
 
@@ -124,6 +126,8 @@ struct AuditTests {
             "R3.OrientationLock|VictimViewController.swift|likely-bug",
             "R4.CustomChromeNoReserved|VictimViewController.swift|product-decision",
             "R4.MissingHingeHook|VictimViewController.swift|product-decision",
+            "R5.FrontCameraAsUser|VictimViewController.swift|product-decision",
+            "R5.CaptureWithoutOuterAccessory|VictimViewController.swift|product-decision",
             "R2.SingleWindow|AppDelegate.swift|likely-bug",
             "R1.StoryboardSizeClass|Base.lproj/Main.storyboard|likely-bug",
         ]
@@ -152,6 +156,12 @@ struct AuditTests {
             $0.id == "R4.CustomChromeNoReserved" && $0.suggestion.contains("DuoReservedRegion")
         })
         #expect(report.findings.contains { $0.id == "R4.MissingHingeHook" && $0.suggestion.contains("DuoHinge") })
+        #expect(report.findings.contains {
+            $0.id == "R5.FrontCameraAsUser" && $0.suggestion.contains("DuoCameraDirection")
+        })
+        #expect(report.findings.contains {
+            $0.id == "R5.CaptureWithoutOuterAccessory" && $0.suggestion.contains("DuoOuterAccessory")
+        })
     }
 
     @Test func autofixReplacesMainScale() throws {

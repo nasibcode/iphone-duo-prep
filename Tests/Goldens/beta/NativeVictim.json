@@ -95,6 +95,22 @@
       "message" : "Fold/hinge pose is used without a DuoHinge hook.",
       "severity" : "product-decision",
       "suggestion" : "Observe via DuoHinge; see Templates/Arrangement/."
+    },
+    {
+      "file" : "VictimViewController.swift",
+      "id" : "R5.FrontCameraAsUser",
+      "line" : 14,
+      "message" : "Front camera is assumed to face the user of this UI.",
+      "severity" : "product-decision",
+      "suggestion" : "Use DuoCameraDirection; see Templates/Camera/ and Docs/CAMERA.md."
+    },
+    {
+      "file" : "VictimViewController.swift",
+      "id" : "R5.CaptureWithoutOuterAccessory",
+      "line" : 15,
+      "message" : "Capture/preview mentions outer display without accessory scaffolding.",
+      "severity" : "product-decision",
+      "suggestion" : "Use DuoOuterAccessory; see Templates/OuterDisplay/ and Docs/CAMERA.md."
     }
   ]
 }

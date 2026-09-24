@@ -30,5 +30,7 @@ struct DuoHarnessTests {
         #expect(arrangement.primary.width == 370)
         #expect(!arrangement.isAvailable)
         #expect(!DuoSceneSession.activateOuterIfAvailable())
+        #expect(!DuoCameraDirection.facingUserForCurrentUI)
+        #expect(!DuoOuterAccessory.registerPreviewAccessoryIfAvailable())
     }
 }
