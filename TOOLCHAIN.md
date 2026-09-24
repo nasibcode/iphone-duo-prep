@@ -1,5 +1,7 @@
 # Toolchain — Xcode 27.1 beta
 
+<!-- Phase A0 pin; Phase A7 retarget when GM ships. -->
+
 Pin: **Xcode 27.1 beta 1**, build **27A9269** (released 2026-09-18).
 
 `xcodebuild -version` on a correct install:
@@ -32,12 +34,23 @@ swift run duo-harness sdk-check          # exit 1 on mismatch
 swift run duo-harness sdk-check --warn   # same message, exit 0
 ```
 
-CI should run `sdk-check` without `--warn` after selecting this Xcode. No GitHub Actions workflow is in the repo yet (CI home is still an open item).
+CI: [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) runs `sdk-check` without `--warn` after selecting this Xcode.
 
 ## Branch
 
-Trunk is `main`. Feature work lands in short branches off `main`. No release tag until `0.1.0` is dogfoodable (after Phase A1).
+Trunk is `main`. Feature work lands in short branches off `main`.
 
-## GM retarget (later, Phase A7)
+## Phase A7 — GM retarget checklist
 
-Do not flip this pin until Xcode 27.1 GM is installed and golden audit diffs are reviewed. Then: update this file, `.xcode-version`, and `ToolchainPin.xcode27_1Beta`, and keep the beta instructions for one release.
+Do **not** flip this pin until Xcode 27.1 GM is installed and golden audit diffs are reviewed.
+
+| Step | Action |
+| --- | --- |
+| 1 | Install GM; dual CI matrix (beta pin + GM) for one sprint |
+| 2 | Recompile; fix availability / renamed symbols; flip `DuoFeatureGate` if headers land |
+| 3 | Re-run audits; write `Tests/Goldens/gm/` |
+| 4 | `swift run duo-harness golden-diff Tests/Goldens/beta/NativeVictim.json Tests/Goldens/gm/NativeVictim.json` |
+| 5 | Update this file, `.xcode-version`, and `ToolchainPin` (rename/retarget static); tag `xcode-27.1-gm` |
+| 6 | Drop beta from default CI; keep [`Docs/toolchain-legacy/BETA.md`](./Docs/toolchain-legacy/BETA.md) for one release |
+
+Policy: no silent “latest Xcode” in CI. Rule metadata / goldens carry the verified pin.
