@@ -55,8 +55,18 @@ class DuoHarness {
     }
   }
 
+  /// 0...1 fold fraction stream; empty when the native EventChannel is absent.
   static Stream<double> observeHinge() {
-    return _hingeEvents.receiveBroadcastStream().map((event) => (event as num).toDouble());
+    try {
+      return _hingeEvents
+          .receiveBroadcastStream()
+          .map((event) => (event as num).toDouble())
+          .handleError((Object _, [StackTrace? __]) {});
+    } on PlatformException {
+      return const Stream<double>.empty();
+    } on MissingPluginException {
+      return const Stream<double>.empty();
+    }
   }
 
   static Future<DuoInsets> reservedInsets() async {

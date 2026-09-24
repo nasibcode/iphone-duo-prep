@@ -109,11 +109,13 @@ public enum Audit {
     private static func scanFile(_ url: URL, root: URL, sawInfoPlist: inout Bool) -> [Finding] {
         let relativePath = relative(url, to: root)
         let ext = url.pathExtension.lowercased()
-        if url.lastPathComponent == "Info.plist" {
-            sawInfoPlist = true
-        }
         if ext == "plist" {
-            return scanPlist(url, file: relativePath, isInfo: url.lastPathComponent == "Info.plist")
+            return scanPlist(
+                url,
+                file: relativePath,
+                isInfo: url.lastPathComponent == "Info.plist",
+                sawInfoPlist: &sawInfoPlist
+            )
         }
         if ext == "pbxproj" {
             return scanPbxproj(url, file: relativePath)
@@ -336,13 +338,20 @@ public enum Audit {
             || text.contains("UIDevice.current.orientation")
     }
 
-    private static func scanPlist(_ url: URL, file: String, isInfo: Bool) -> [Finding] {
+    private static func scanPlist(
+        _ url: URL,
+        file: String,
+        isInfo: Bool,
+        sawInfoPlist: inout Bool
+    ) -> [Finding] {
         guard let data = try? Data(contentsOf: url) else { return [] }
         var format = PropertyListSerialization.PropertyListFormat.xml
         guard let object = try? PropertyListSerialization.propertyList(from: data, options: [], format: &format),
               let dict = object as? [String: Any] else {
             return []
         }
+        // Only count a readable Info.plist; unreadable/malformed keep sawInfoPlist false → fallback R2.
+        if isInfo { sawInfoPlist = true }
         var findings: [Finding] = []
         if isInfo, dict["UIApplicationSceneManifest"] == nil {
             findings.append(sceneManifest(file: file, message: "Info.plist has no UIApplicationSceneManifest."))

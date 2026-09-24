@@ -118,6 +118,11 @@ struct AuditTests {
         #expect(findings[0].severity == .blocker)
     }
 
+    @Test func malformedInfoPlistStillEmitsMissingSceneManifest() throws {
+        let findings = try scan(name: "Info.plist", "not-a-plist{{{")
+        #expect(findings.contains { $0.id == "R2.MissingSceneManifest" && $0.severity == .blocker })
+    }
+
     @Test func severityRawValuesRoundTrip() throws {
         let expected = [
             "blocker",
