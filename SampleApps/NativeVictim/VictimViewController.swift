@@ -9,6 +9,8 @@ final class VictimViewController: UIViewController {
         view.bounds.size.width = 390
         if traitCollection.userInterfaceIdiom == .phone {}
         if UIDevice.current.orientation == .portrait {}
+        UIToolbar().frame = view.bounds
+        _ = foldState
         _ = (screen, pad)
     }
 }

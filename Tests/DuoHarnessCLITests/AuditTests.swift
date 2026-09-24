@@ -12,10 +12,13 @@ struct AuditTests {
         ("R2.SingleWindow", "_ = UIApplication.shared.windows\n"),
         ("R3.UserInterfaceIdiom", "if traitCollection.userInterfaceIdiom == .phone {}\n"),
         ("R3.OrientationLock", "if UIDevice.current.orientation == .portrait {}\n"),
+        ("R4.CustomChromeNoReserved", "UIToolbar().frame = view.bounds\n"),
+        ("R4.MissingHingeHook", "let a = hingeAngle\n"),
     ])
     func lineRule(id: String, source: String) throws {
         let findings = try scan(name: "Fixture.swift", source)
-        #expect(findings.contains { $0.id == id && $0.severity == .likelyBug })
+        let severity: Severity = id.hasPrefix("R4.") ? .productDecision : .likelyBug
+        #expect(findings.contains { $0.id == id && $0.severity == severity })
     }
 
     @Test func lineNegatives() throws {
@@ -119,6 +122,8 @@ struct AuditTests {
             "R1.HardcodedPhoneWidth|VictimViewController.swift|likely-bug",
             "R3.UserInterfaceIdiom|VictimViewController.swift|likely-bug",
             "R3.OrientationLock|VictimViewController.swift|likely-bug",
+            "R4.CustomChromeNoReserved|VictimViewController.swift|product-decision",
+            "R4.MissingHingeHook|VictimViewController.swift|product-decision",
             "R2.SingleWindow|AppDelegate.swift|likely-bug",
             "R1.StoryboardSizeClass|Base.lproj/Main.storyboard|likely-bug",
         ]
@@ -132,16 +137,21 @@ struct AuditTests {
         let markdown = Audit.markdown(report)
         let blocker = try #require(markdown.range(of: "## blocker"))
         let likely = try #require(markdown.range(of: "## likely-bug"))
+        let product = try #require(markdown.range(of: "## product-decision"))
         #expect(blocker.lowerBound < likely.lowerBound)
+        #expect(likely.lowerBound < product.lowerBound)
         for id in ["R2.MissingSceneManifest", "R2.UIRequiresFullScreen"] {
             let hit = try #require(markdown.range(of: id))
             #expect(hit.lowerBound < likely.lowerBound)
         }
-        #expect(!markdown.contains("## product-decision"))
         #expect(!markdown.contains("## enhancement"))
         #expect(report.findings.contains { $0.id == "R1.UIScreenMain" && $0.suggestion.contains("DuoScreen") })
         #expect(report.findings.contains { $0.id == "R1.SafeAreaTimesTwo" && $0.suggestion.contains("DuoSafeArea") })
         #expect(report.findings.contains { $0.id == "R3.UserInterfaceIdiom" && $0.suggestion.contains("DuoSizeGate") })
+        #expect(report.findings.contains {
+            $0.id == "R4.CustomChromeNoReserved" && $0.suggestion.contains("DuoReservedRegion")
+        })
+        #expect(report.findings.contains { $0.id == "R4.MissingHingeHook" && $0.suggestion.contains("DuoHinge") })
     }
 
     @Test func autofixReplacesMainScale() throws {

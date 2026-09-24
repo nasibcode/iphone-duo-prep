@@ -79,6 +79,22 @@
       "message" : "Orientation is locked or read from the device.",
       "severity" : "likely-bug",
       "suggestion" : "Lay out for the current size; the inner display can ignore orientation locks."
+    },
+    {
+      "file" : "VictimViewController.swift",
+      "id" : "R4.CustomChromeNoReserved",
+      "line" : 12,
+      "message" : "Custom chrome may span the fold without reserved-region awareness.",
+      "severity" : "product-decision",
+      "suggestion" : "Use DuoReservedRegion for fold-safe chrome; see Templates/Arrangement/."
+    },
+    {
+      "file" : "VictimViewController.swift",
+      "id" : "R4.MissingHingeHook",
+      "line" : 13,
+      "message" : "Fold/hinge pose is used without a DuoHinge hook.",
+      "severity" : "product-decision",
+      "suggestion" : "Observe via DuoHinge; see Templates/Arrangement/."
     }
   ]
 }

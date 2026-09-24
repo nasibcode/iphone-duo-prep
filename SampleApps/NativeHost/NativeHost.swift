@@ -23,6 +23,17 @@ public enum NativeHost {
     public static func demoInsets() -> DuoEdgeInsets {
         DuoSafeArea.insets(top: 47, left: 0, bottom: 34, right: 0)
     }
+
+    /// Fold-safe chrome path — reserved insets are zero until DuoFeatureGate flips.
+    public static func foldSafeChromeInsets() -> DuoEdgeInsets {
+        DuoReservedRegion.insets()
+    }
+
+    /// Optional Arrangement + outer-display path (outer activation is false while unavailable).
+    public static func arrangementOuterDemo() -> (DuoArrangement, Bool) {
+        let arrangement = DuoArrangement.splitHalf(container: DuoDisplayPreset.duoInnerRegular.size)
+        return (arrangement, DuoSceneSession.activateOuterIfAvailable())
+    }
 }
 
 #if canImport(UIKit)
@@ -31,9 +42,12 @@ public final class HostViewController: UIViewController {
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         let insets = DuoSafeArea.insets(from: view)
+        let reserved = DuoReservedRegion.layoutGuideInsets(for: view)
         let compact = DuoSizeGate.isCompactWidth(view.bounds.size)
         let scale = DuoScreen.displayScale(from: traitCollection)
-        _ = (insets, compact, scale, DuoDisplayPreset.duoInnerRegular.size)
+        let arrangement = DuoArrangement.splitHalf(container: view.bounds.size)
+        let outer = DuoSceneSession.activateOuterIfAvailable()
+        _ = (insets, reserved, compact, scale, arrangement, outer, DuoDisplayPreset.duoInnerRegular.size)
     }
 }
 #endif

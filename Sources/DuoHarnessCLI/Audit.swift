@@ -185,7 +185,36 @@ public enum Audit {
                 "Lay out for the current size; the inner display can ignore orientation locks."
             ))
         }
+        if customChromeNoReserved(line) {
+            findings.append(make(
+                "R4.CustomChromeNoReserved", .productDecision, file, lineNumber,
+                "Custom chrome may span the fold without reserved-region awareness.",
+                "Use DuoReservedRegion for fold-safe chrome; see Templates/Arrangement/."
+            ))
+        }
+        if missingHingeHook(line) {
+            findings.append(make(
+                "R4.MissingHingeHook", .productDecision, file, lineNumber,
+                "Fold/hinge pose is used without a DuoHinge hook.",
+                "Observe via DuoHinge; see Templates/Arrangement/."
+            ))
+        }
         return findings
+    }
+
+    private static func customChromeNoReserved(_ line: String) -> Bool {
+        let chrome = line.contains("UIToolbar") || line.contains("UITabBar")
+        let spans = line.contains(".frame") || line.contains("bounds")
+        return chrome && spans && !line.contains("DuoReservedRegion")
+    }
+
+    private static func missingHingeHook(_ line: String) -> Bool {
+        let pose =
+            line.contains("hingeAngle")
+            || line.contains("foldState")
+            || line.contains("partialFold")
+            || line.contains("standingPose")
+        return pose && !line.contains("DuoHinge")
     }
 
     private static func singleWindow(_ line: String) -> Bool {
