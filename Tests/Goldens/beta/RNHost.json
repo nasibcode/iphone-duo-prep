@@ -1,0 +1,60 @@
+{
+  "findings" : [
+    {
+      "file" : "ios/Info.plist",
+      "id" : "R2.MissingSceneManifest",
+      "line" : 1,
+      "message" : "Info.plist has no UIApplicationSceneManifest.",
+      "severity" : "blocker",
+      "suggestion" : "Add UIApplicationSceneManifest."
+    },
+    {
+      "file" : "ios/Info.plist",
+      "id" : "R2.UIRequiresFullScreen",
+      "line" : 1,
+      "message" : "UIRequiresFullScreen is set.",
+      "severity" : "blocker",
+      "suggestion" : "Remove it so Split View can run."
+    },
+    {
+      "file" : "src/App.tsx",
+      "id" : "R6.RNOrientationLock",
+      "line" : 3,
+      "message" : "React Native orientation lock may be ignored on the Duo inner display.",
+      "severity" : "likely-bug",
+      "suggestion" : "Lay out for size via Adapters/DuoHarnessRN; do not rely on orientation locks."
+    },
+    {
+      "file" : "src/App.tsx",
+      "id" : "R6.FixedDimensions",
+      "line" : 8,
+      "message" : "React Native Dimensions.get window size used as a layout constant.",
+      "severity" : "likely-bug",
+      "suggestion" : "Prefer Adapters/DuoHarnessRN size helpers; avoid fixed window dimensions."
+    },
+    {
+      "file" : "src/App.tsx",
+      "id" : "R6.RNOrientationLock",
+      "line" : 10,
+      "message" : "React Native orientation lock may be ignored on the Duo inner display.",
+      "severity" : "likely-bug",
+      "suggestion" : "Lay out for size via Adapters/DuoHarnessRN; do not rely on orientation locks."
+    },
+    {
+      "file" : "src/App.tsx",
+      "id" : "R6.RNOrientationLock",
+      "line" : 11,
+      "message" : "React Native orientation lock may be ignored on the Duo inner display.",
+      "severity" : "likely-bug",
+      "suggestion" : "Lay out for size via Adapters/DuoHarnessRN; do not rely on orientation locks."
+    },
+    {
+      "file" : "src/App.tsx",
+      "id" : "R6.MissingAdapter",
+      "line" : 8,
+      "message" : "Cross-platform layout anti-pattern without DuoHarness adapter.",
+      "severity" : "enhancement",
+      "suggestion" : "Adopt Adapters/DuoHarnessRN; see Docs/ADAPTERS.md."
+    }
+  ]
+}

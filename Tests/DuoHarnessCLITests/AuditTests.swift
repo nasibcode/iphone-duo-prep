@@ -23,6 +23,28 @@ struct AuditTests {
         #expect(findings.contains { $0.id == id && $0.severity == severity })
     }
 
+    @Test(arguments: [
+        ("R6.FixedMediaQuery", "main.dart", "final w = MediaQuery.of(context).size.width;\n"),
+        ("R6.OrientationLock", "main.dart", "SystemChrome.setPreferredOrientations([Orientation.portrait]);\n"),
+        ("R6.FixedDimensions", "App.tsx", "const { width } = Dimensions.get('window');\n"),
+        ("R6.RNOrientationLock", "App.tsx", "ScreenOrientation.lock();\n"),
+        ("R6.MissingAdapter", "main.dart", "final w = MediaQuery.of(context).size.width;\n"),
+    ])
+    func r6LineRule(id: String, name: String, source: String) throws {
+        let findings = try scan(name: name, source)
+        let severity: Severity = id == "R6.MissingAdapter" ? .enhancement : .likelyBug
+        #expect(findings.contains { $0.id == id && $0.severity == severity })
+    }
+
+    @Test func r6MissingAdapterSkippedWhenAdapterCited() throws {
+        let findings = try scan(
+            name: "ok.dart",
+            "final w = MediaQuery.of(context).size.width; // duo_harness\n"
+        )
+        #expect(findings.contains { $0.id == "R6.FixedMediaQuery" })
+        #expect(!findings.contains { $0.id == "R6.MissingAdapter" })
+    }
+
     @Test func lineNegatives() throws {
         let source = """
         let screen = UIScreen()

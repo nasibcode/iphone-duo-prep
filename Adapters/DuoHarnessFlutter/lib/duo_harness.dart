@@ -1,0 +1,78 @@
+/// Phase A5 — Flutter Dart façade.
+/// Thin Dart façade over the DuoHarness iOS MethodChannel.
+/// Defaults match DuoFeatureGate degrade (zeros / compact false) when the channel is absent.
+library duo_harness;
+
+import 'package:flutter/services.dart';
+
+const _channel = MethodChannel('duo_harness');
+const _hingeEvents = EventChannel('duo_harness/hinge');
+
+class DuoInsets {
+  const DuoInsets({this.top = 0, this.left = 0, this.bottom = 0, this.right = 0});
+  final double top, left, bottom, right;
+}
+
+class DuoHarness {
+  /// Safe-area insets; asymmetric across the fold when the native side is live.
+  static Future<DuoInsets> safeAreaInsets() async {
+    try {
+      final map = await _channel.invokeMethod<Map>('safeAreaInsets');
+      if (map == null) return const DuoInsets();
+      return DuoInsets(
+        top: (map['top'] as num?)?.toDouble() ?? 0,
+        left: (map['left'] as num?)?.toDouble() ?? 0,
+        bottom: (map['bottom'] as num?)?.toDouble() ?? 0,
+        right: (map['right'] as num?)?.toDouble() ?? 0,
+      );
+    } on PlatformException {
+      return const DuoInsets();
+    } on MissingPluginException {
+      return const DuoInsets();
+    }
+  }
+
+  static Future<bool> isCompactWidth(double width) async {
+    try {
+      final value = await _channel.invokeMethod<bool>('isCompactWidth', {'width': width});
+      return value ?? width < 600;
+    } on PlatformException {
+      return width < 600;
+    } on MissingPluginException {
+      return width < 600;
+    }
+  }
+
+  /// 0...1 fold fraction; 0 when unavailable.
+  static Future<double> hingeFraction() async {
+    try {
+      final value = await _channel.invokeMethod<num>('hingeFraction');
+      return value?.toDouble() ?? 0;
+    } on PlatformException {
+      return 0;
+    } on MissingPluginException {
+      return 0;
+    }
+  }
+
+  static Stream<double> observeHinge() {
+    return _hingeEvents.receiveBroadcastStream().map((event) => (event as num).toDouble());
+  }
+
+  static Future<DuoInsets> reservedInsets() async {
+    try {
+      final map = await _channel.invokeMethod<Map>('reservedInsets');
+      if (map == null) return const DuoInsets();
+      return DuoInsets(
+        top: (map['top'] as num?)?.toDouble() ?? 0,
+        left: (map['left'] as num?)?.toDouble() ?? 0,
+        bottom: (map['bottom'] as num?)?.toDouble() ?? 0,
+        right: (map['right'] as num?)?.toDouble() ?? 0,
+      );
+    } on PlatformException {
+      return const DuoInsets();
+    } on MissingPluginException {
+      return const DuoInsets();
+    }
+  }
+}

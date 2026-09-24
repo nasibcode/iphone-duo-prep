@@ -1,3 +1,4 @@
+// Phase A1 — pattern/plist audit (R1–R3); R4=A3, R5=A4, R6=A5.
 import Foundation
 
 public enum Severity: String, Codable, CaseIterable, Equatable, Sendable {
@@ -99,9 +100,11 @@ public enum Audit {
     }
 
     private static let skipDirectories: Set<String> = [
-        ".git", ".build", "DerivedData", "Pods", "node_modules", "checkouts",
+        ".git", ".build", "DerivedData", "Pods", "node_modules", "checkouts", "android",
     ]
-    private static let lineExtensions: Set<String> = ["swift", "m", "mm", "h"]
+    private static let lineExtensions: Set<String> = [
+        "swift", "m", "mm", "h", "dart", "ts", "tsx", "js", "jsx",
+    ]
 
     private static func scanFile(_ url: URL, root: URL, sawInfoPlist: inout Bool) -> [Finding] {
         let relativePath = relative(url, to: root)
@@ -213,7 +216,78 @@ public enum Audit {
                 "Use DuoOuterAccessory; see Templates/OuterDisplay/ and Docs/CAMERA.md."
             ))
         }
+        if fixedMediaQuery(line) {
+            findings.append(make(
+                "R6.FixedMediaQuery", .likelyBug, file, lineNumber,
+                "Flutter MediaQuery size used as a fixed layout assumption.",
+                "Prefer Adapters/DuoHarnessFlutter size helpers; avoid phone-width MediaQuery layout."
+            ))
+            if missingAdapter(line) {
+                findings.append(missingAdapterFinding(file: file, line: lineNumber, flutter: true))
+            }
+        }
+        if flutterOrientationLock(line) {
+            findings.append(make(
+                "R6.OrientationLock", .likelyBug, file, lineNumber,
+                "Flutter orientation lock may be ignored on the Duo inner display.",
+                "Lay out for size via Adapters/DuoHarnessFlutter; do not rely on orientation locks."
+            ))
+        }
+        if fixedDimensions(line) {
+            findings.append(make(
+                "R6.FixedDimensions", .likelyBug, file, lineNumber,
+                "React Native Dimensions.get window size used as a layout constant.",
+                "Prefer Adapters/DuoHarnessRN size helpers; avoid fixed window dimensions."
+            ))
+            if missingAdapter(line) {
+                findings.append(missingAdapterFinding(file: file, line: lineNumber, flutter: false))
+            }
+        }
+        if rnOrientationLock(line) {
+            findings.append(make(
+                "R6.RNOrientationLock", .likelyBug, file, lineNumber,
+                "React Native orientation lock may be ignored on the Duo inner display.",
+                "Lay out for size via Adapters/DuoHarnessRN; do not rely on orientation locks."
+            ))
+        }
         return findings
+    }
+
+    private static func fixedMediaQuery(_ line: String) -> Bool {
+        let media = line.contains("MediaQuery.of") || line.contains("MediaQuery.sizeOf")
+        let size = line.contains(".size.width") || line.contains(".size.height") || line.contains("size.width")
+            || line.contains("size.height")
+        return (media && size) || line.contains("const Size(")
+    }
+
+    private static func flutterOrientationLock(_ line: String) -> Bool {
+        line.contains("SystemChrome.setPreferredOrientations")
+            || (line.contains("setPreferredOrientations") && line.contains("Orientation."))
+    }
+
+    private static func fixedDimensions(_ line: String) -> Bool {
+        line.contains("Dimensions.get('window')") || line.contains("Dimensions.get(\"window\")")
+    }
+
+    private static func rnOrientationLock(_ line: String) -> Bool {
+        line.contains("orientation: 'portrait'")
+            || line.contains("orientation: \"portrait\"")
+            || line.contains("OrientationLocker")
+            || line.contains("ScreenOrientation.lock")
+            || line.contains("expo-screen-orientation")
+    }
+
+    private static func missingAdapter(_ line: String) -> Bool {
+        !line.contains("duo_harness") && !line.contains("DuoHarness")
+    }
+
+    private static func missingAdapterFinding(file: String, line: Int, flutter: Bool) -> Finding {
+        let path = flutter ? "Adapters/DuoHarnessFlutter" : "Adapters/DuoHarnessRN"
+        return make(
+            "R6.MissingAdapter", .enhancement, file, line,
+            "Cross-platform layout anti-pattern without DuoHarness adapter.",
+            "Adopt \(path); see Docs/ADAPTERS.md."
+        )
     }
 
     private static func customChromeNoReserved(_ line: String) -> Bool {
