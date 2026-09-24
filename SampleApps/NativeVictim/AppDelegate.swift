@@ -1,3 +1,4 @@
+// Phase A1 — intentional R2 SingleWindow finding.
 import UIKit
 
 final class AppDelegate: UIResponder, UIApplicationDelegate {

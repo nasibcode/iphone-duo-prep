@@ -1,3 +1,4 @@
+// Phase A2 — size-class gates (not idiom).
 import CoreGraphics
 
 public enum DuoSizeGate {

@@ -1,3 +1,4 @@
+// Phase A4 — outer accessory template.
 import DuoHarness
 
 /// Copy when capture + outer preview is a product choice. Never forced by the auditor.

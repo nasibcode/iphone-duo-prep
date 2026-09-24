@@ -1,3 +1,4 @@
+// Phase A2 — mechanical autofix (UIScreen.main.scale → traitCollection.displayScale).
 import Foundation
 
 public enum Autofix {

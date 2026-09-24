@@ -1,3 +1,4 @@
+// Phase A2/A3/A4 — dogfood host linking DuoHarness + Testing.
 import DuoHarness
 import DuoHarnessTesting
 import Foundation

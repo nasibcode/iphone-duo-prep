@@ -1,3 +1,4 @@
+// Phase A2 — safe-area helpers.
 import CoreGraphics
 
 #if canImport(UIKit)

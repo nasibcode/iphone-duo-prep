@@ -1,3 +1,4 @@
+<!-- Phase A4 -->
 # Camera & outer display — product decisions
 
 Duo breaks the phone assumption that **front camera = person using this UI**. Outer-display capture / preview is **opt-in product work**, not a baseline migration fix.

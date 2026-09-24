@@ -19,7 +19,7 @@
     {
       "file" : "AppDelegate.swift",
       "id" : "R2.SingleWindow",
-      "line" : 8,
+      "line" : 9,
       "message" : "Code assumes a single window.",
       "severity" : "likely-bug",
       "suggestion" : "Use the scene window; do not assume one UIWindow."
@@ -35,7 +35,7 @@
     {
       "file" : "VictimViewController.swift",
       "id" : "R1.UIScreenMain",
-      "line" : 6,
+      "line" : 7,
       "message" : "UIScreen.main does not track the window's screen.",
       "severity" : "likely-bug",
       "suggestion" : "Use DuoScreen for the window scene's screen; use traitCollection.displayScale for scale."
@@ -43,7 +43,7 @@
     {
       "file" : "VictimViewController.swift",
       "id" : "R1.SafeAreaTimesTwo",
-      "line" : 7,
+      "line" : 8,
       "message" : "safeAreaInsets are combined symmetrically.",
       "severity" : "likely-bug",
       "suggestion" : "Use DuoSafeArea; keep top and bottom insets separate."
@@ -51,7 +51,7 @@
     {
       "file" : "VictimViewController.swift",
       "id" : "R1.FixedCGRect",
-      "line" : 8,
+      "line" : 9,
       "message" : "Frame uses a fixed CGRect.",
       "severity" : "likely-bug",
       "suggestion" : "Size from the container; use DuoDisplayPreset sizes in tests."
@@ -59,7 +59,7 @@
     {
       "file" : "VictimViewController.swift",
       "id" : "R1.HardcodedPhoneWidth",
-      "line" : 9,
+      "line" : 10,
       "message" : "Width is a hardcoded phone point value.",
       "severity" : "likely-bug",
       "suggestion" : "Use container width or DuoDisplayPreset, not a phone point value."
@@ -67,7 +67,7 @@
     {
       "file" : "VictimViewController.swift",
       "id" : "R3.UserInterfaceIdiom",
-      "line" : 10,
+      "line" : 11,
       "message" : "Layout branches on userInterfaceIdiom.",
       "severity" : "likely-bug",
       "suggestion" : "Use DuoSizeGate on container size, not phone/pad idiom."
@@ -75,7 +75,7 @@
     {
       "file" : "VictimViewController.swift",
       "id" : "R3.OrientationLock",
-      "line" : 11,
+      "line" : 12,
       "message" : "Orientation is locked or read from the device.",
       "severity" : "likely-bug",
       "suggestion" : "Lay out for the current size; the inner display can ignore orientation locks."
@@ -83,7 +83,7 @@
     {
       "file" : "VictimViewController.swift",
       "id" : "R4.CustomChromeNoReserved",
-      "line" : 12,
+      "line" : 13,
       "message" : "Custom chrome may span the fold without reserved-region awareness.",
       "severity" : "product-decision",
       "suggestion" : "Use DuoReservedRegion for fold-safe chrome; see Templates/Arrangement/."
@@ -91,7 +91,7 @@
     {
       "file" : "VictimViewController.swift",
       "id" : "R4.MissingHingeHook",
-      "line" : 13,
+      "line" : 14,
       "message" : "Fold/hinge pose is used without a DuoHinge hook.",
       "severity" : "product-decision",
       "suggestion" : "Observe via DuoHinge; see Templates/Arrangement/."
@@ -99,7 +99,7 @@
     {
       "file" : "VictimViewController.swift",
       "id" : "R5.FrontCameraAsUser",
-      "line" : 14,
+      "line" : 15,
       "message" : "Front camera is assumed to face the user of this UI.",
       "severity" : "product-decision",
       "suggestion" : "Use DuoCameraDirection; see Templates/Camera/ and Docs/CAMERA.md."
@@ -107,7 +107,7 @@
     {
       "file" : "VictimViewController.swift",
       "id" : "R5.CaptureWithoutOuterAccessory",
-      "line" : 15,
+      "line" : 16,
       "message" : "Capture/preview mentions outer display without accessory scaffolding.",
       "severity" : "product-decision",
       "suggestion" : "Use DuoOuterAccessory; see Templates/OuterDisplay/ and Docs/CAMERA.md."

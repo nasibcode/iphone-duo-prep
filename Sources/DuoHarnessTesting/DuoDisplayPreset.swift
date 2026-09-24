@@ -1,3 +1,4 @@
+// Phase A2 — named Duo size presets for tests.
 import CoreGraphics
 
 public enum DuoDisplayPreset: String, CaseIterable, Sendable {

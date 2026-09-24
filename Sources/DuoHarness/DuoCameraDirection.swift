@@ -1,3 +1,4 @@
+// Phase A4 — camera direction façade (opt-in product).
 /// Façade for “which camera faces whom” on Duo (front ≠ user of this UI).
 /// ponytail: no AVFoundation until SDK direction coordinator lands; gate flip enables real mapping.
 public enum DuoCameraDirection {

@@ -1,3 +1,4 @@
+// Phase A1 (+R4/R5) — intentional audit failures.
 import UIKit
 
 final class VictimViewController: UIViewController {

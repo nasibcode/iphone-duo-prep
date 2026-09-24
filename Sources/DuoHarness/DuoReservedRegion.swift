@@ -1,3 +1,4 @@
+// Phase A3 — reserved-region / fold chrome insets.
 import CoreGraphics
 
 #if canImport(UIKit)

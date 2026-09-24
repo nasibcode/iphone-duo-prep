@@ -1,3 +1,4 @@
+// Phase A3 — hinge / fold observer.
 /// Hinge / fold-fraction observer. No-ops when differentiated APIs are unavailable.
 public enum DuoHinge {
     public struct ObservationToken: Sendable, Equatable {

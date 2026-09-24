@@ -1,3 +1,4 @@
+// Phase A4 — Arrangement template.
 import CoreGraphics
 import DuoHarness
 

@@ -1,3 +1,4 @@
+// Phase A3 — Arrangement-style two-pane descriptor.
 import CoreGraphics
 
 /// Thin Arrangement-style two-pane descriptor. Does not bind unknown SDK types.

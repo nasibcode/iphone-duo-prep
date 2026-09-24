@@ -1,3 +1,4 @@
+// Phase A0 — toolchain pin check (retarget pin in A7).
 import Foundation
 
 public struct XcodeVersion: Equatable, Sendable {

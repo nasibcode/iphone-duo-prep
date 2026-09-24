@@ -1,3 +1,4 @@
+// Phase A4 — camera template (no autofix).
 import DuoHarness
 
 /// Copy when assuming “front camera = user” is wrong on Duo. Opt-in product work — no autofix.

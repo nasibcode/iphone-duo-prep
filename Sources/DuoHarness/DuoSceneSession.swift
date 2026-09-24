@@ -1,3 +1,4 @@
+// Phase A3 — outer / multi-scene session helpers.
 /// Outer / multi-scene session helpers. Returns false when differentiated APIs are unavailable (never throws).
 public enum DuoSceneSession {
     public static var preferOuterDisplay: Bool { false }

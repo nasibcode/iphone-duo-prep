@@ -1,3 +1,4 @@
+// Phase A2 — asymmetric insets (never sum top+bottom).
 import CoreGraphics
 
 /// Separate edges — never sum top and bottom for Duo layouts.

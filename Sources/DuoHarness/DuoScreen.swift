@@ -1,3 +1,4 @@
+// Phase A2 — screen / scale shims.
 import CoreGraphics
 
 #if canImport(UIKit)
