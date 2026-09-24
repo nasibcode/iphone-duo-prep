@@ -22,7 +22,7 @@
       "line" : 3,
       "message" : "React Native orientation lock may be ignored on the Duo inner display.",
       "severity" : "likely-bug",
-      "suggestion" : "Lay out for size via Adapters/DuoHarnessRN; do not rely on orientation locks."
+      "suggestion" : "Lay out for size via Adapters/iPhoneDuoPrepRN; do not rely on orientation locks."
     },
     {
       "file" : "src/App.tsx",
@@ -30,7 +30,7 @@
       "line" : 8,
       "message" : "React Native Dimensions.get window size used as a layout constant.",
       "severity" : "likely-bug",
-      "suggestion" : "Prefer Adapters/DuoHarnessRN size helpers; avoid fixed window dimensions."
+      "suggestion" : "Prefer Adapters/iPhoneDuoPrepRN size helpers; avoid fixed window dimensions."
     },
     {
       "file" : "src/App.tsx",
@@ -38,7 +38,7 @@
       "line" : 10,
       "message" : "React Native orientation lock may be ignored on the Duo inner display.",
       "severity" : "likely-bug",
-      "suggestion" : "Lay out for size via Adapters/DuoHarnessRN; do not rely on orientation locks."
+      "suggestion" : "Lay out for size via Adapters/iPhoneDuoPrepRN; do not rely on orientation locks."
     },
     {
       "file" : "src/App.tsx",
@@ -46,15 +46,15 @@
       "line" : 11,
       "message" : "React Native orientation lock may be ignored on the Duo inner display.",
       "severity" : "likely-bug",
-      "suggestion" : "Lay out for size via Adapters/DuoHarnessRN; do not rely on orientation locks."
+      "suggestion" : "Lay out for size via Adapters/iPhoneDuoPrepRN; do not rely on orientation locks."
     },
     {
       "file" : "src/App.tsx",
       "id" : "R6.MissingAdapter",
       "line" : 8,
-      "message" : "Cross-platform layout anti-pattern without DuoHarness adapter.",
+      "message" : "Cross-platform layout anti-pattern without iPhoneDuoPrep adapter.",
       "severity" : "enhancement",
-      "suggestion" : "Adopt Adapters/DuoHarnessRN; see Docs/ADAPTERS.md."
+      "suggestion" : "Adopt Adapters/iPhoneDuoPrepRN; see Docs/ADAPTERS.md."
     }
   ]
 }

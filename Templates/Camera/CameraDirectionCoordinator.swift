@@ -1,5 +1,5 @@
 // Phase A4 — camera template (no autofix).
-import DuoHarness
+import iPhoneDuoPrep
 
 /// Copy when assuming “front camera = user” is wrong on Duo. Opt-in product work — no autofix.
 public enum DuoCameraDirectionCoordinator {

@@ -1,16 +1,16 @@
-import DuoHarness
-import DuoHarnessCLI
-import DuoHarnessTesting
+import iPhoneDuoPrep
+import iPhoneDuoPrepCLI
+import iPhoneDuoPrepTesting
 import Foundation
 
 // Phase A0 — CLI entry; subcommands grow per phase (A1 audit, A2 autofix, A6 gate/checklist, A7 golden-diff).
 @main
-enum DuoHarnessMain {
+enum iPhoneDuoPrepMain {
     static func main() {
         let args = Array(CommandLine.arguments.dropFirst())
         switch args.first {
         case "version":
-            print("duo-harness \(DuoHarness.version)")
+            print("iphone-duo-prep \(iPhoneDuoPrep.version)")
         case "sdk-check":
             // Phase A0
             let warnOnly = args.dropFirst().contains("--warn")
@@ -49,17 +49,17 @@ enum DuoHarnessMain {
     }
 
     private static let usage = """
-    duo-harness \(DuoHarness.version)
+    iphone-duo-prep \(iPhoneDuoPrep.version)
 
     Usage:
-      duo-harness version
-      duo-harness sdk-check [--warn]
-      duo-harness audit <path> [--format json|markdown] [--semantic] [--fail-on <severity>]
-      duo-harness suggest <path>
-      duo-harness report <path> --output <file> [--format json|markdown] [--semantic]
-      duo-harness autofix <path> [--checklist]
-      duo-harness matrix [--format markdown|args]
-      duo-harness golden-diff <left.json> <right.json> [--left-label beta] [--right-label gm]
+      iphone-duo-prep version
+      iphone-duo-prep sdk-check [--warn]
+      iphone-duo-prep audit <path> [--format json|markdown] [--semantic] [--fail-on <severity>]
+      iphone-duo-prep suggest <path>
+      iphone-duo-prep report <path> --output <file> [--format json|markdown] [--semantic]
+      iphone-duo-prep autofix <path> [--checklist]
+      iphone-duo-prep matrix [--format markdown|args]
+      iphone-duo-prep golden-diff <left.json> <right.json> [--left-label beta] [--right-label gm]
     """
 
     private static func runAudit(_ args: [String]) {

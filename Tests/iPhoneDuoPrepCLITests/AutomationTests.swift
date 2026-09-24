@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import DuoHarnessCLI
+@testable import iPhoneDuoPrepCLI
 
 // Phase A6 / A7 — semantic refine, severity gate, checklist, golden-diff.
 struct AutomationTests {

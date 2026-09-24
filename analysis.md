@@ -2,7 +2,7 @@
 
 **Audience:** iOS eng leads deciding whether to build a developer harness that makes Duo support “mostly automatic.”  
 **Date:** 2026-09-22  
-**Repo:** `duo-harness` — initial SPM scaffold (`DuoHarness` product).  
+**Repo:** `iphone-duo-prep` — initial SPM scaffold (`iPhoneDuoPrep` product).  
 **Verdict:** A harness is feasible and valuable as an **audit + runtime helpers + guided patches** product. A true **zero-manual-migration** tool is not realistic. Ship MVP as SPM + CLI first.
 
 ---
@@ -56,8 +56,8 @@ Do **not** start with an Xcode plugin or full AST-rewriting “migrate my app”
 
 | Layer | Role | Why |
 | --- | --- | --- |
-| **1. CLI (`duo-harness`)** | Static scan of Swift / storyboards / Info.plist / project settings; emit prioritized findings + patch suggestions | Fastest value for any existing codebase; CI-friendly |
-| **2. SPM library (`DuoHarness` / `DuoKit`)** | Runtime helpers: trait/size wrappers, reserved-region adapters, safe layout helpers, test fixtures, optional Arrangement wrappers | Catches what static analysis cannot; ships with the app |
+| **1. CLI (`iphone-duo-prep`)** | Static scan of Swift / storyboards / Info.plist / project settings; emit prioritized findings + patch suggestions | Fastest value for any existing codebase; CI-friendly |
+| **2. SPM library (`iPhoneDuoPrep` / `DuoKit`)** | Runtime helpers: trait/size wrappers, reserved-region adapters, safe layout helpers, test fixtures, optional Arrangement wrappers | Catches what static analysis cannot; ships with the app |
 | **3. Templates / snippets** | Scene delegate stubs, ArrangementView skeletons, camera accessory scaffolds, XCTest / snapshot size matrices | Reduces boilerplate after human decisions |
 | **4. Lint rules (SwiftLint custom / SourceKit)** | Ban patterns: `UIScreen.main`, symmetric `safeAreaInsets.left * 2`, orientation locks keyed off idiom | Continuous prevention |
 | **5. Codegen (limited)** | Generate size-class test matrices, Info.plist scene manifests, “checklist PRs” | Only for mechanical files |
@@ -72,10 +72,10 @@ Do **not** start with an Xcode plugin or full AST-rewriting “migrate my app”
 ### Concrete package sketch (illustrative only — not implemented)
 
 ```
-DuoHarness/
-  Sources/DuoHarness/          # runtime: SizeClassGate, ReservedRegionLayout, HingeBridge
-  Sources/DuoHarnessTesting/   # preset display configs for UI tests
-Plugins/ or Tools/duo-harness/ # CLI: audit, report, suggest
+iPhoneDuoPrep/
+  Sources/iPhoneDuoPrep/          # runtime: SizeClassGate, ReservedRegionLayout, HingeBridge
+  Sources/iPhoneDuoPrepTesting/   # preset display configs for UI tests
+Plugins/ or Tools/iphone-duo-prep/ # CLI: audit, report, suggest
 Templates/                     # Scene + Arrangement starters
 ```
 
@@ -213,14 +213,14 @@ CLI outputs: JSON + Markdown report with severity (`blocker` / `likely-bug` / `p
 
 **Do not** implement a full migrator yet. Build a **dogfoodable MVP** that proves the automation boundary:
 
-1. **Scaffold** Swift package `DuoHarness` + executable target `duo-harness`.  
+1. **Scaffold** Swift package `iPhoneDuoPrep` + executable target `iphone-duo-prep`.  
 2. **Ship 8–12 high-signal audit rules** (UIScreen.main, safeArea `* 2`, idiom/orientation branches, missing UIApplicationSceneManifest, UIRequiresFullScreen, fixed CGRect layouts in flagged files, storyboard size-class absence heuristic).  
-3. **Add** `DuoHarnessTesting` with named size presets: `duoOuterPortrait`, `duoInnerRegular`, `duoSplitHalf`.  
-4. **Add** a tiny SampleApp with intentional failures so `duo-harness audit` demonstrates value.  
+3. **Add** `iPhoneDuoPrepTesting` with named size presets: `duoOuterPortrait`, `duoInnerRegular`, `duoSplitHalf`.  
+4. **Add** a tiny SampleApp with intentional failures so `iphone-duo-prep audit` demonstrates value.  
 5. **README:** how to run CLI, interpret severities, map findings → Apple Prepare/Design docs.  
 6. **Defer** Arrangement/hinge/camera wrappers until SDK headers are available in the build environment.
 
-**Exit criteria for the slice:** a new engineer can clone, run `swift run duo-harness audit SampleApp`, and get a prioritized report without reading Apple’s videos first.
+**Exit criteria for the slice:** a new engineer can clone, run `swift run iphone-duo-prep audit SampleApp`, and get a prioritized report without reading Apple’s videos first.
 
 ---
 

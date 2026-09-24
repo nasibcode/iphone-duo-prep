@@ -11,11 +11,11 @@
 
 ## When this was active
 
-CI selected this Xcode via `DEVELOPER_DIR` / `xcode-select`. `duo-harness sdk-check` required build `27A9269`.
+CI selected this Xcode via `DEVELOPER_DIR` / `xcode-select`. `iphone-duo-prep sdk-check` required build `27A9269`.
 
 ## After GM retarget
 
 1. Update root `TOOLCHAIN.md` + `.xcode-version` + `ToolchainPin` to GM.
 2. Re-run audits → write `Tests/Goldens/gm/`.
-3. `swift run duo-harness golden-diff Tests/Goldens/beta/… Tests/Goldens/gm/…` and review.
+3. `swift run iphone-duo-prep golden-diff Tests/Goldens/beta/… Tests/Goldens/gm/…` and review.
 4. Leave this file until the next major pin drop.

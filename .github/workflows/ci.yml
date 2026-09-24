@@ -8,7 +8,7 @@ on:
   pull_request:
 
 jobs:
-  harness:
+  prep:
     runs-on: macos-latest
     # Phase A0 — pin Xcode 27.1 beta on the runner image (adjust path per image).
     env:
@@ -18,7 +18,7 @@ jobs:
 
       # Phase A0 — fail closed on wrong Xcode (see TOOLCHAIN.md)
       - name: sdk-check
-        run: swift run duo-harness sdk-check
+        run: swift run iphone-duo-prep sdk-check
 
       - name: build & test
         run: |
@@ -28,9 +28,9 @@ jobs:
       # Phase A1 dogfood — assert golden IDs (NativeVictim is intentionally dirty)
       - name: audit NativeVictim
         run: |
-          swift run duo-harness audit SampleApps/NativeVictim --format json \
+          swift run iphone-duo-prep audit SampleApps/NativeVictim --format json \
             | tee NativeVictim-report.json
-          swift run duo-harness audit SampleApps/NativeVictim --format markdown \
+          swift run iphone-duo-prep audit SampleApps/NativeVictim --format markdown \
             | tee NativeVictim-report.md
           diff -u Tests/Goldens/beta/NativeVictim.json NativeVictim-report.json
 
@@ -46,11 +46,11 @@ jobs:
       # Phase A6 — severity gate smoke on a clean temp tree (no Info.plist → blocker)
       - name: fail-on smoke
         run: |
-          mkdir -p /tmp/duo-empty && ! swift run duo-harness audit /tmp/duo-empty --fail-on blocker
+          mkdir -p /tmp/duo-empty && ! swift run iphone-duo-prep audit /tmp/duo-empty --fail-on blocker
 
       # Phase A7 — dual goldens (identical until GM retarget changes gm/)
       - name: golden-diff beta vs gm
         run: |
-          swift run duo-harness golden-diff \
+          swift run iphone-duo-prep golden-diff \
             Tests/Goldens/beta/NativeVictim.json \
             Tests/Goldens/gm/NativeVictim.json

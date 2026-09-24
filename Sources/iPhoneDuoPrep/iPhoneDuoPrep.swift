@@ -1,4 +1,4 @@
 // Phase A2 — package version façade.
-public enum DuoHarness {
+public enum iPhoneDuoPrep {
     public static let version = "0.1.0"
 }

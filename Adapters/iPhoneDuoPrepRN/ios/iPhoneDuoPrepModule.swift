@@ -2,13 +2,13 @@
 import Foundation
 import CoreGraphics
 
-#if canImport(DuoHarness)
-import DuoHarness
+#if canImport(iPhoneDuoPrep)
+import iPhoneDuoPrep
 #endif
 
-/// TurboModule / RCT_EXTERN stub. Export as `DuoHarness` to match `NativeModules.DuoHarness`.
-public enum DuoHarnessModule {
-    public static let moduleName = "DuoHarness"
+/// TurboModule / RCT_EXTERN stub. Export as `iPhoneDuoPrep` to match `NativeModules.iPhoneDuoPrep`.
+public enum iPhoneDuoPrepModule {
+    public static let moduleName = "iPhoneDuoPrep"
 
     public static func safeAreaInsets() -> [String: Double] {
         ["top": 0, "left": 0, "bottom": 0, "right": 0]
@@ -19,7 +19,7 @@ public enum DuoHarnessModule {
     }
 
     public static func isCompactWidth(_ width: Double) -> Bool {
-        #if canImport(DuoHarness)
+        #if canImport(iPhoneDuoPrep)
         return DuoSizeGate.isCompactWidth(CGSize(width: width, height: 1))
         #else
         return width < 600
@@ -27,7 +27,7 @@ public enum DuoHarnessModule {
     }
 
     public static func hingeFraction() -> Double {
-        #if canImport(DuoHarness)
+        #if canImport(iPhoneDuoPrep)
         return DuoHinge.currentFraction
         #else
         return 0

@@ -1,5 +1,5 @@
 // Phase A4 — scene stub template.
-import DuoHarness
+import iPhoneDuoPrep
 
 /// Copy into your app’s scene setup. Outer activation is a no-op until DuoFeatureGate flips.
 public enum DuoSceneStub {

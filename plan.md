@@ -2,7 +2,7 @@
 
 **Status:** Executable plan (locked scope)  
 **Date:** 2026-09-22  
-**Repo:** `duo-harness` (project **iPhone Duo Harness**, SPM product **DuoHarness**)  
+**Repo:** `iphone-duo-prep` (project **iPhone Duo Harness**, SPM product **iPhoneDuoPrep**)  
 **Upstream analysis:** [`analysis.md`](./analysis.md)
 
 ---
@@ -25,7 +25,7 @@ Honest framing from analysis (unchanged): the product is **audit + runtime helpe
 
 1. **Dogfoodable native MVP early** — CLI audit + SPM runtime/testing + SampleApp that teams can run without reading Apple videos first.
 2. **Full Duo surface in v1** — reserved regions / hinge / Arrangement-style wrappers, outer-display scene helpers, camera accessory scaffolds — gated on `#available` + SDK detection, not delayed to a “v2 product.”
-3. **All stacks covered** — first-class UIKit/SwiftUI/hybrid; Flutter and RN via plugin/module adapters that call into `DuoHarness` (or thin native bridges) plus stack-specific audit rules.
+3. **All stacks covered** — first-class UIKit/SwiftUI/hybrid; Flutter and RN via plugin/module adapters that call into `iPhoneDuoPrep` (or thin native bridges) plus stack-specific audit rules.
 4. **CI-ready** — JSON + Markdown reports; GitHub Actions (or equivalent) job template; severity taxonomy teams can gate on.
 5. **SDK discipline** — pin Xcode 27.1 beta; documented GM retarget checklist with golden-report diffs.
 
@@ -54,7 +54,7 @@ Honest framing from analysis (unchanged): the product is **audit + runtime helpe
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  duo-harness CLI  (executable)                                  │
+│  iphone-duo-prep CLI  (executable)                                  │
 │  audit | suggest | autofix | report | sdk-check                 │
 └────────────┬──────────────────────────────┬─────────────────────┘
              │ findings / patches           │ reads manifests
@@ -68,17 +68,17 @@ Honest framing from analysis (unchanged): the product is **audit + runtime helpe
 └────────────────────────┘     └──────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────┐
-│  DuoHarness (SPM library) — ships in the app                     │
+│  iPhoneDuoPrep (SPM library) — ships in the app                     │
 │  Layout · Scenes · Hinge/ReservedRegion · Camera scaffolds       │
 │  UIKit + SwiftUI facades; ObjC-compatible where hybrid needs it  │
 ├─────────────────────────────────────────────────────────────────┤
-│  DuoHarnessTesting — size/pose presets, snapshot fixtures        │
+│  iPhoneDuoPrepTesting — size/pose presets, snapshot fixtures        │
 └─────────────────────────────────────────────────────────────────┘
              ▲
              │ depends on native API surface
 ┌────────────┴────────────────────────────────────────────────────┐
 │  Cross-platform adapters                                         │
-│  DuoHarnessFlutter (plugin)  ·  DuoHarnessRN (TurboModule)       │
+│  iPhoneDuoPrepFlutter (plugin)  ·  iPhoneDuoPrepRN (TurboModule)       │
 │  Thin bridges + JS/Dart APIs mirroring native helpers            │
 └─────────────────────────────────────────────────────────────────┘
 
@@ -92,8 +92,8 @@ Docs/          — runbooks mapped to Apple Prepare / Design / Duo hub
 | Layer | Owns | Does not own |
 | --- | --- | --- |
 | **CLI** | Detection, severity, suggested fix class, optional mechanical diffs, SDK pin verification | Runtime behavior in production apps |
-| **DuoHarness** | Safe layout/scene/hinge/camera helpers; feature detection | Product IA (one-pane vs split vs overlay) |
-| **DuoHarnessTesting** | Named configs (`duoOuterPortrait`, `duoInnerRegular`, `duoSplitHalf`, pose variants) | Golden image policy for consuming apps |
+| **iPhoneDuoPrep** | Safe layout/scene/hinge/camera helpers; feature detection | Product IA (one-pane vs split vs overlay) |
+| **iPhoneDuoPrepTesting** | Named configs (`duoOuterPortrait`, `duoInnerRegular`, `duoSplitHalf`, pose variants) | Golden image policy for consuming apps |
 | **Templates** | Boilerplate after a human chose a pattern | Automated pattern choice |
 | **Flutter/RN adapters** | Bridging + stack-specific audit hooks | Replacing Flutter/RN layout engines |
 
@@ -115,7 +115,7 @@ Reports: **JSON** (CI) + **Markdown** (humans). Autofix only for rules marked `m
 ```
 A0 Toolchain pin
  → A1 CLI + pattern rules + SampleApp (dogfood)
- → A2 DuoHarness + Testing presets
+ → A2 iPhoneDuoPrep + Testing presets
  → A3 Duo-differentiated native wrappers (hinge / reserved / Arrangement / scenes)
  → A4 Templates + camera scaffolds
  → A5 Flutter + RN adapters
@@ -123,7 +123,7 @@ A0 Toolchain pin
  → A7 Xcode GM retarget
 ```
 
-**Dogfood gate:** after A1–A2, a new engineer runs `swift run duo-harness audit SampleApps/NativeVictim` and gets a prioritized report. Differentiated features (A3–A5) land on that spine without rewriting it.
+**Dogfood gate:** after A1–A2, a new engineer runs `swift run iphone-duo-prep audit SampleApps/NativeVictim` and gets a prioritized report. Differentiated features (A3–A5) land on that spine without rewriting it.
 
 ### Phase A0 — Toolchain & repo skeleton
 
@@ -137,9 +137,9 @@ A0 Toolchain pin
 
 | | |
 | --- | --- |
-| **Deliver** | `duo-harness` executable; 8–12 high-signal pattern + plist/project rules; Markdown/JSON report; `SampleApps/NativeVictim` with intentional failures |
+| **Deliver** | `iphone-duo-prep` executable; 8–12 high-signal pattern + plist/project rules; Markdown/JSON report; `SampleApps/NativeVictim` with intentional failures |
 | **Depends on** | A0 |
-| **Exit** | Clone → `swift run duo-harness audit …` → scored backlog without watching Apple videos |
+| **Exit** | Clone → `swift run iphone-duo-prep audit …` → scored backlog without watching Apple videos |
 
 **Rules (initial set):** `UIScreen.main`, symmetric `safeAreaInsets * 2`, idiom/orientation branches, missing `UIApplicationSceneManifest`, `UIRequiresFullScreen`, fixed `CGRect` heuristics, storyboard size-class absence, hardcoded phone widths, single-window assumptions in flagged files.
 
@@ -147,7 +147,7 @@ A0 Toolchain pin
 
 | | |
 | --- | --- |
-| **Deliver** | `DuoHarness` (safe-area helpers, screen-API shims, trait/size gates); `DuoHarnessTesting` presets; UIKit + SwiftUI SampleApp usage; ≥1 mechanical autofix (e.g. scale → `traitCollection.displayScale`) |
+| **Deliver** | `iPhoneDuoPrep` (safe-area helpers, screen-API shims, trait/size gates); `iPhoneDuoPrepTesting` presets; UIKit + SwiftUI SampleApp usage; ≥1 mechanical autofix (e.g. scale → `traitCollection.displayScale`) |
 | **Depends on** | A1 (CLI shape stable enough to reference helpers in suggestions) |
 | **Exit** | SampleApp links SPM; tests run against named Duo size presets; suggestions cite concrete APIs |
 
@@ -171,9 +171,9 @@ A0 Toolchain pin
 
 | | |
 | --- | --- |
-| **Deliver** | `DuoHarnessFlutter` plugin + `DuoHarnessRN` module; Dart/TS APIs mirroring size/hinge/reserved helpers where bridgeable; CLI rules for common Flutter/RN anti-patterns (fixed `MediaQuery`, orientation locks, missing platform views); smoke host apps |
+| **Deliver** | `iPhoneDuoPrepFlutter` plugin + `iPhoneDuoPrepRN` module; Dart/TS APIs mirroring size/hinge/reserved helpers where bridgeable; CLI rules for common Flutter/RN anti-patterns (fixed `MediaQuery`, orientation locks, missing platform views); smoke host apps |
 | **Depends on** | A2 minimum; A3 for fold/hinge parity; does **not** block A1–A2 exit |
-| **Exit** | Host apps call through adapters; `duo-harness audit` understands Flutter/`android`/`ios` trees enough to flag native-side gaps; gap doc lists APIs not yet exposed by Flutter/RN |
+| **Exit** | Host apps call through adapters; `iphone-duo-prep audit` understands Flutter/`android`/`ios` trees enough to flag native-side gaps; gap doc lists APIs not yet exposed by Flutter/RN |
 
 ### Phase A6 — Stronger automation & CI
 
@@ -201,12 +201,12 @@ A0 Toolchain pin
 /
   Package.swift
   Sources/
-    DuoHarness/                 # runtime library
-    DuoHarnessTesting/          # test fixtures
-    duo-harness/                # CLI executable target
+    iPhoneDuoPrep/                 # runtime library
+    iPhoneDuoPrepTesting/          # test fixtures
+    iphone-duo-prep/                # CLI executable target
   Adapters/
-    DuoHarnessFlutter/          # Flutter plugin package
-    DuoHarnessRN/               # RN native module + JS package
+    iPhoneDuoPrepFlutter/          # Flutter plugin package
+    iPhoneDuoPrepRN/               # RN native module + JS package
   Templates/
     Scene/
     Arrangement/
@@ -218,9 +218,9 @@ A0 Toolchain pin
     FlutterHost/                # Phase A5
     RNHost/                     # Phase A5
   Tests/
-    DuoHarnessTests/
-    DuoHarnessCLITests/
-    DuoHarnessTestingTests/
+    iPhoneDuoPrepTests/
+    iPhoneDuoPrepCLITests/
+    iPhoneDuoPrepTestingTests/
   .github/workflows/            # or org CI equivalent
   Docs/                         # developer-facing; keep in sync with store docs as needed
   README.md
@@ -251,7 +251,7 @@ All public APIs: availability annotations + runtime SDK check; degrade gracefull
 
 ### Flutter / RN adapter strategy
 
-1. **Native-first:** implement behavior in `DuoHarness`.  
+1. **Native-first:** implement behavior in `iPhoneDuoPrep`.  
 2. **Bridge thin:** Flutter MethodChannel/EventChannel or RN TurboModule exposing presets, hinge stream, reserved insets.  
 3. **Audit second:** CLI walks `ios/` (and key Dart/TS patterns) and points to adapter adoption.  
 4. **Gap register:** markdown table of Duo APIs without framework parity — update every SDK pin bump.  
@@ -267,7 +267,7 @@ All public APIs: availability annotations + runtime SDK check; degrade gracefull
 
 ### CI
 
-- Job: resolve pinned Xcode → `swift test` → `duo-harness audit SampleApps/NativeVictim` → assert finding IDs present  
+- Job: resolve pinned Xcode → `swift test` → `iphone-duo-prep audit SampleApps/NativeVictim` → assert finding IDs present  
 - Optional: severity gate (`blocker` fails build) configurable  
 - Artifact: Markdown report upload  
 - A7: matrix job beta-archive vs GM during migration window  
@@ -286,7 +286,7 @@ All public APIs: availability annotations + runtime SDK check; degrade gracefull
 ### Now (locked)
 
 1. Record exact **Xcode 27.1 beta** build number in `TOOLCHAIN.md` + CI env (`DEVELOPER_DIR` / `xcode-select`).  
-2. CLI subcommand `duo-harness sdk-check` — fail or warn if local toolchain ≠ pin (policy flag).  
+2. CLI subcommand `iphone-duo-prep sdk-check` — fail or warn if local toolchain ≠ pin (policy flag).  
 3. Feature detection: compile against beta headers; wrap new symbols; never assume final API names until verified in this environment.  
 4. Snapshot **golden audit reports** per SampleApp under `Tests/Goldens/beta/`.  
 
@@ -297,14 +297,14 @@ All public APIs: availability annotations + runtime SDK check; degrade gracefull
 | 1 | Install GM; dual CI matrix (beta pin + GM) for one sprint |
 | 2 | Recompile; fix availability / renamed symbols |
 | 3 | Re-run audits; diff goldens → `Tests/Goldens/gm/` |
-| 4 | Update pin docs; tag `duo-harness` release `xcode-27.1-gm` |
+| 4 | Update pin docs; tag `iphone-duo-prep` release `xcode-27.1-gm` |
 | 5 | Drop beta from default CI; keep beta instructions under `toolchain-legacy` for 1 release |
 
 ### Policy
 
 - No silent “latest Xcode” in CI.  
 - Codegen and rule metadata carry `minXcode` / `verifiedSDK`.  
-- Breaking API renames in `DuoHarness` get semver minor/major per stability promise in README.
+- Breaking API renames in `iPhoneDuoPrep` get semver minor/major per stability promise in README.
 
 ---
 
@@ -344,9 +344,9 @@ Execute in order; parallelize only where noted.
 
 | Step | Agent focus | Done when |
 | --- | --- | --- |
-| **1** | Scaffold `Package.swift` with `DuoHarness`, `DuoHarnessTesting`, `duo-harness`; add `TOOLCHAIN.md` pin | `swift build` works on pinned toolchain (or documents blocker if Xcode absent) |
+| **1** | Scaffold `Package.swift` with `iPhoneDuoPrep`, `iPhoneDuoPrepTesting`, `iphone-duo-prep`; add `TOOLCHAIN.md` pin | `swift build` works on pinned toolchain (or documents blocker if Xcode absent) |
 | **2** | Implement CLI `audit` + R1–R3 rules + JSON/Markdown writer | Unit tests for rule matches on fixture snippets |
-| **3** | Add `SampleApps/NativeVictim` + golden expected findings | `swift run duo-harness audit SampleApps/NativeVictim` matches goldens |
+| **3** | Add `SampleApps/NativeVictim` + golden expected findings | `swift run iphone-duo-prep audit SampleApps/NativeVictim` matches goldens |
 | **4** | Implement SPM helpers + testing presets; wire SampleApp | XCTest using `duoOuterPortrait` / `duoInnerRegular` / `duoSplitHalf` |
 | **5** | One mechanical autofix + README dogfood path | Diff is reviewable; docs complete for MVP |
 | **6** *(parallel after 4)* | A3 wrappers behind availability; expand SampleApp demos | Compiles; demos run on simulator where possible |

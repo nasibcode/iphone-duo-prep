@@ -11,8 +11,8 @@ Pin: **Xcode 27.1 beta** (see [TOOLCHAIN.md](./TOOLCHAIN.md)).
 3. Clone:
 
 ```bash
-git clone https://github.com/nasibcode/duo-harness.git
-cd duo-harness
+git clone https://github.com/nasibcode/iphone-duo-prep.git
+cd iphone-duo-prep
 ```
 
 ## Build & smoke
@@ -20,18 +20,18 @@ cd duo-harness
 ```bash
 swift build
 swift test
-swift run duo-harness version
-swift run duo-harness sdk-check
+swift run iphone-duo-prep version
+swift run iphone-duo-prep sdk-check
 # Phase A1
-swift run duo-harness audit SampleApps/NativeVictim
+swift run iphone-duo-prep audit SampleApps/NativeVictim
 # Phase A2
-swift run duo-harness autofix SampleApps/NativeVictim
+swift run iphone-duo-prep autofix SampleApps/NativeVictim
 # Phase A6
-swift run duo-harness audit SampleApps/NativeVictim --semantic --fail-on blocker; echo exit:$?
-swift run duo-harness autofix SampleApps/NativeVictim --checklist
-swift run duo-harness matrix
+swift run iphone-duo-prep audit SampleApps/NativeVictim --semantic --fail-on blocker; echo exit:$?
+swift run iphone-duo-prep autofix SampleApps/NativeVictim --checklist
+swift run iphone-duo-prep matrix
 # Phase A7
-swift run duo-harness golden-diff Tests/Goldens/beta/NativeVictim.json Tests/Goldens/gm/NativeVictim.json
+swift run iphone-duo-prep golden-diff Tests/Goldens/beta/NativeVictim.json Tests/Goldens/gm/NativeVictim.json
 ```
 
 ## Docs in this folder
@@ -46,10 +46,10 @@ swift run duo-harness golden-diff Tests/Goldens/beta/NativeVictim.json Tests/Gol
 ## Add as a dependency
 
 ```swift
-.package(url: "https://github.com/nasibcode/duo-harness.git", from: "0.1.0")
+.package(url: "https://github.com/nasibcode/iphone-duo-prep.git", from: "0.1.0")
 ```
 
 ```swift
-.product(name: "DuoHarness", package: "duo-harness")
-.product(name: "DuoHarnessTesting", package: "duo-harness")
+.product(name: "iPhoneDuoPrep", package: "iphone-duo-prep")
+.product(name: "iPhoneDuoPrepTesting", package: "iphone-duo-prep")
 ```

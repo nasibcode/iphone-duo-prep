@@ -1,6 +1,6 @@
 // Phase A4 — Arrangement template.
 import CoreGraphics
-import DuoHarness
+import iPhoneDuoPrep
 
 /// Copy for a two-pane Arrangement path. Reserved chrome insets are zero until the gate flips.
 public enum DuoArrangementSkeleton {

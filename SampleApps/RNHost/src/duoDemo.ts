@@ -1,12 +1,12 @@
 // Phase A5 — RNHost adapter demo (intentional R6 hits).
-// Adapter smoke — calls DuoHarnessRN size/hinge APIs.
+// Adapter smoke — calls iPhoneDuoPrepRN size/hinge APIs.
 import {
   hingeFraction,
   isCompactWidth,
   observeHinge,
   reservedInsets,
   safeAreaInsets,
-} from "../../../Adapters/DuoHarnessRN/src";
+} from "../../../Adapters/iPhoneDuoPrepRN/src";
 
 export async function demoDuoHelpers(): Promise<void> {
   const insets = await safeAreaInsets();

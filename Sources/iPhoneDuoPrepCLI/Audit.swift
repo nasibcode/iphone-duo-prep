@@ -222,7 +222,7 @@ public enum Audit {
             findings.append(make(
                 "R6.FixedMediaQuery", .likelyBug, file, lineNumber,
                 "Flutter MediaQuery size used as a fixed layout assumption.",
-                "Prefer Adapters/DuoHarnessFlutter size helpers; avoid phone-width MediaQuery layout."
+                "Prefer Adapters/iPhoneDuoPrepFlutter size helpers; avoid phone-width MediaQuery layout."
             ))
             if missingAdapter(line) {
                 findings.append(missingAdapterFinding(file: file, line: lineNumber, flutter: true))
@@ -232,14 +232,14 @@ public enum Audit {
             findings.append(make(
                 "R6.OrientationLock", .likelyBug, file, lineNumber,
                 "Flutter orientation lock may be ignored on the Duo inner display.",
-                "Lay out for size via Adapters/DuoHarnessFlutter; do not rely on orientation locks."
+                "Lay out for size via Adapters/iPhoneDuoPrepFlutter; do not rely on orientation locks."
             ))
         }
         if fixedDimensions(line) {
             findings.append(make(
                 "R6.FixedDimensions", .likelyBug, file, lineNumber,
                 "React Native Dimensions.get window size used as a layout constant.",
-                "Prefer Adapters/DuoHarnessRN size helpers; avoid fixed window dimensions."
+                "Prefer Adapters/iPhoneDuoPrepRN size helpers; avoid fixed window dimensions."
             ))
             if missingAdapter(line) {
                 findings.append(missingAdapterFinding(file: file, line: lineNumber, flutter: false))
@@ -249,7 +249,7 @@ public enum Audit {
             findings.append(make(
                 "R6.RNOrientationLock", .likelyBug, file, lineNumber,
                 "React Native orientation lock may be ignored on the Duo inner display.",
-                "Lay out for size via Adapters/DuoHarnessRN; do not rely on orientation locks."
+                "Lay out for size via Adapters/iPhoneDuoPrepRN; do not rely on orientation locks."
             ))
         }
         return findings
@@ -280,14 +280,15 @@ public enum Audit {
     }
 
     private static func missingAdapter(_ line: String) -> Bool {
-        !line.contains("duo_harness") && !line.contains("DuoHarness")
+        let lower = line.lowercased()
+        return !lower.contains("iphone_duo_prep") && !lower.contains("iphoneduoprep")
     }
 
     private static func missingAdapterFinding(file: String, line: Int, flutter: Bool) -> Finding {
-        let path = flutter ? "Adapters/DuoHarnessFlutter" : "Adapters/DuoHarnessRN"
+        let path = flutter ? "Adapters/iPhoneDuoPrepFlutter" : "Adapters/iPhoneDuoPrepRN"
         return make(
             "R6.MissingAdapter", .enhancement, file, line,
-            "Cross-platform layout anti-pattern without DuoHarness adapter.",
+            "Cross-platform layout anti-pattern without iPhoneDuoPrep adapter.",
             "Adopt \(path); see Docs/ADAPTERS.md."
         )
     }

@@ -1,6 +1,6 @@
 # Phase A6 — Audit rules
 
-Rule IDs, severity, and autofix eligibility for `duo-harness audit`.
+Rule IDs, severity, and autofix eligibility for `iphone-duo-prep audit`.
 
 | ID | Phase | Severity | Autofix | Notes |
 | --- | --- | --- | --- | --- |

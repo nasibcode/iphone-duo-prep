@@ -1,7 +1,7 @@
 /** Phase A5 — React Native TS façade. */
 /**
- * Thin TS façade over the DuoHarness native module.
- * Defaults match DuoFeatureGate degrade when NativeModules.DuoHarness is absent.
+ * Thin TS façade over the iPhoneDuoPrep native module.
+ * Defaults match DuoFeatureGate degrade when NativeModules.iPhoneDuoPrep is absent.
  */
 
 export type DuoInsets = {
@@ -25,7 +25,7 @@ function native(): DuoNative | undefined {
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { NativeModules } = require("react-native");
-    return NativeModules?.DuoHarness as DuoNative | undefined;
+    return NativeModules?.iPhoneDuoPrep as DuoNative | undefined;
   } catch {
     return undefined;
   }

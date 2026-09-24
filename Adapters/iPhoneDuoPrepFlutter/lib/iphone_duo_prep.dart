@@ -1,19 +1,20 @@
 /// Phase A5 — Flutter Dart façade.
-/// Thin Dart façade over the DuoHarness iOS MethodChannel.
+/// Thin Dart façade over the iPhoneDuoPrep iOS MethodChannel.
 /// Defaults match DuoFeatureGate degrade (zeros / compact false) when the channel is absent.
-library duo_harness;
+library iphone_duo_prep;
 
 import 'package:flutter/services.dart';
 
-const _channel = MethodChannel('duo_harness');
-const _hingeEvents = EventChannel('duo_harness/hinge');
+const _channel = MethodChannel('iphone_duo_prep');
+const _hingeEvents = EventChannel('iphone_duo_prep/hinge');
 
 class DuoInsets {
   const DuoInsets({this.top = 0, this.left = 0, this.bottom = 0, this.right = 0});
   final double top, left, bottom, right;
 }
 
-class DuoHarness {
+/// Dart façade for iPhone Duo prep helpers (channel: `iphone_duo_prep`).
+class IPhoneDuoPrep {
   /// Safe-area insets; asymmetric across the fold when the native side is live.
   static Future<DuoInsets> safeAreaInsets() async {
     try {

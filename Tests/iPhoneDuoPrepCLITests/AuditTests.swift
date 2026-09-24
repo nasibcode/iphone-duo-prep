@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import DuoHarnessCLI
+@testable import iPhoneDuoPrepCLI
 
 struct AuditTests {
     @Test(arguments: [
@@ -39,7 +39,7 @@ struct AuditTests {
     @Test func r6MissingAdapterSkippedWhenAdapterCited() throws {
         let findings = try scan(
             name: "ok.dart",
-            "final w = MediaQuery.of(context).size.width; // duo_harness\n"
+            "final w = MediaQuery.of(context).size.width; // iphone_duo_prep\n"
         )
         #expect(findings.contains { $0.id == "R6.FixedMediaQuery" })
         #expect(!findings.contains { $0.id == "R6.MissingAdapter" })

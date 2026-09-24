@@ -30,8 +30,8 @@ Requires macOS Tahoe 26.6 or later. The beta installs beside Xcode 27.0; it does
 ## Check
 
 ```bash
-swift run duo-harness sdk-check          # exit 1 on mismatch
-swift run duo-harness sdk-check --warn   # same message, exit 0
+swift run iphone-duo-prep sdk-check          # exit 1 on mismatch
+swift run iphone-duo-prep sdk-check --warn   # same message, exit 0
 ```
 
 CI: [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) runs `sdk-check` without `--warn` after selecting this Xcode.
@@ -49,7 +49,7 @@ Do **not** flip this pin until Xcode 27.1 GM is installed and golden audit diffs
 | 1 | Install GM; dual CI matrix (beta pin + GM) for one sprint |
 | 2 | Recompile; fix availability / renamed symbols; flip `DuoFeatureGate` if headers land |
 | 3 | Re-run audits; write `Tests/Goldens/gm/` |
-| 4 | `swift run duo-harness golden-diff Tests/Goldens/beta/NativeVictim.json Tests/Goldens/gm/NativeVictim.json` |
+| 4 | `swift run iphone-duo-prep golden-diff Tests/Goldens/beta/NativeVictim.json Tests/Goldens/gm/NativeVictim.json` |
 | 5 | Update this file, `.xcode-version`, and `ToolchainPin` (rename/retarget static); tag `xcode-27.1-gm` |
 | 6 | Drop beta from default CI; keep [`Docs/toolchain-legacy/BETA.md`](./Docs/toolchain-legacy/BETA.md) for one release |
 

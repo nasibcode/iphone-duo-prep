@@ -1,4 +1,4 @@
-import DuoHarnessCLI
+import iPhoneDuoPrepCLI
 import Testing
 
 // Phase A0 — toolchain pin unit tests (Swift Testing).

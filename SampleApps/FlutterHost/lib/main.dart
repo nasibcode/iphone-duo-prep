@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-/// Intentional R6 anti-patterns for duo-harness audit dogfood.
+/// Intentional R6 anti-patterns for iphone-duo-prep audit dogfood.
 void main() {
   // R6.OrientationLock
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);

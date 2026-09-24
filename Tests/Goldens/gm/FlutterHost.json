@@ -22,7 +22,7 @@
       "line" : 8,
       "message" : "Flutter orientation lock may be ignored on the Duo inner display.",
       "severity" : "likely-bug",
-      "suggestion" : "Lay out for size via Adapters/DuoHarnessFlutter; do not rely on orientation locks."
+      "suggestion" : "Lay out for size via Adapters/iPhoneDuoPrepFlutter; do not rely on orientation locks."
     },
     {
       "file" : "lib/main.dart",
@@ -30,7 +30,7 @@
       "line" : 19,
       "message" : "Flutter MediaQuery size used as a fixed layout assumption.",
       "severity" : "likely-bug",
-      "suggestion" : "Prefer Adapters/DuoHarnessFlutter size helpers; avoid phone-width MediaQuery layout."
+      "suggestion" : "Prefer Adapters/iPhoneDuoPrepFlutter size helpers; avoid phone-width MediaQuery layout."
     },
     {
       "file" : "lib/main.dart",
@@ -38,7 +38,7 @@
       "line" : 20,
       "message" : "Flutter MediaQuery size used as a fixed layout assumption.",
       "severity" : "likely-bug",
-      "suggestion" : "Prefer Adapters/DuoHarnessFlutter size helpers; avoid phone-width MediaQuery layout."
+      "suggestion" : "Prefer Adapters/iPhoneDuoPrepFlutter size helpers; avoid phone-width MediaQuery layout."
     },
     {
       "file" : "lib/main.dart",
@@ -46,31 +46,31 @@
       "line" : 22,
       "message" : "Flutter MediaQuery size used as a fixed layout assumption.",
       "severity" : "likely-bug",
-      "suggestion" : "Prefer Adapters/DuoHarnessFlutter size helpers; avoid phone-width MediaQuery layout."
+      "suggestion" : "Prefer Adapters/iPhoneDuoPrepFlutter size helpers; avoid phone-width MediaQuery layout."
     },
     {
       "file" : "lib/main.dart",
       "id" : "R6.MissingAdapter",
       "line" : 19,
-      "message" : "Cross-platform layout anti-pattern without DuoHarness adapter.",
+      "message" : "Cross-platform layout anti-pattern without iPhoneDuoPrep adapter.",
       "severity" : "enhancement",
-      "suggestion" : "Adopt Adapters/DuoHarnessFlutter; see Docs/ADAPTERS.md."
+      "suggestion" : "Adopt Adapters/iPhoneDuoPrepFlutter; see Docs/ADAPTERS.md."
     },
     {
       "file" : "lib/main.dart",
       "id" : "R6.MissingAdapter",
       "line" : 20,
-      "message" : "Cross-platform layout anti-pattern without DuoHarness adapter.",
+      "message" : "Cross-platform layout anti-pattern without iPhoneDuoPrep adapter.",
       "severity" : "enhancement",
-      "suggestion" : "Adopt Adapters/DuoHarnessFlutter; see Docs/ADAPTERS.md."
+      "suggestion" : "Adopt Adapters/iPhoneDuoPrepFlutter; see Docs/ADAPTERS.md."
     },
     {
       "file" : "lib/main.dart",
       "id" : "R6.MissingAdapter",
       "line" : 22,
-      "message" : "Cross-platform layout anti-pattern without DuoHarness adapter.",
+      "message" : "Cross-platform layout anti-pattern without iPhoneDuoPrep adapter.",
       "severity" : "enhancement",
-      "suggestion" : "Adopt Adapters/DuoHarnessFlutter; see Docs/ADAPTERS.md."
+      "suggestion" : "Adopt Adapters/iPhoneDuoPrepFlutter; see Docs/ADAPTERS.md."
     }
   ]
 }

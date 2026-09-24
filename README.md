@@ -1,13 +1,13 @@
-# DuoHarness _(duo-harness)_
+# iPhone Duo Prep
 
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](./LICENSE)
 
-Audit, runtime helpers, and guided patches for iPhone Duo (fold / dual display / hinge).
+Audit, runtime helpers, and guided patches to prepare apps for **iPhone Duo** (fold / dual display / hinge).
 
 Not a one-click migrator. It finds high-signal anti-patterns, points at concrete APIs and templates, and applies only *mechanical* autofixes. Product choices (outer display, camera “who faces whom”, Arrangement chrome) stay human.
 
-SPM products: **`DuoHarness`**, **`DuoHarnessTesting`**. CLI: **`duo-harness`**. Display name differs from the package/repo folder name `duo-harness` on purpose.
+Package / CLI: **`iphone-duo-prep`**. SPM products: **`iPhoneDuoPrep`**, **`iPhoneDuoPrepTesting`**.
 
 ## Table of Contents
 
@@ -36,7 +36,7 @@ Duo breaks assumptions most phone apps still encode:
 | Front camera = person using *this* UI | Outer capture can face someone else |
 | One window / full-screen-only | Scenes, Split View, multi-display sessions |
 
-This harness shortens the path from Apple’s Prepare/Design guidance to a **scored backlog** and reusable helpers. See [analysis.md](./analysis.md).
+iPhone Duo Prep shortens the path from Apple’s Prepare/Design guidance to a **scored backlog** and reusable helpers. See [analysis.md](./analysis.md).
 
 ## Install
 
@@ -50,23 +50,23 @@ Pin: **Xcode 27.1 beta** (build `27A9269`). Full pin notes: [TOOLCHAIN.md](./TOO
 ### From source
 
 ```bash
-git clone https://github.com/nasibcode/duo-harness.git
-cd duo-harness
+git clone https://github.com/nasibcode/iphone-duo-prep.git
+cd iphone-duo-prep
 swift build
 swift test
-swift run duo-harness sdk-check
+swift run iphone-duo-prep sdk-check
 ```
 
 ### As a package dependency
 
 ```swift
 // Package.swift / Xcode → Package Dependencies
-.package(url: "https://github.com/nasibcode/duo-harness.git", from: "0.1.0")
+.package(url: "https://github.com/nasibcode/iphone-duo-prep.git", from: "0.1.0")
 ```
 
 ```swift
-.product(name: "DuoHarness", package: "duo-harness")
-.product(name: "DuoHarnessTesting", package: "duo-harness")
+.product(name: "iPhoneDuoPrep", package: "iphone-duo-prep")
+.product(name: "iPhoneDuoPrepTesting", package: "iphone-duo-prep")
 ```
 
 ## Usage
@@ -74,7 +74,7 @@ swift run duo-harness sdk-check
 First win: audit `SampleApps/NativeVictim` (intentional Duo anti-patterns).
 
 ```bash
-swift run duo-harness audit SampleApps/NativeVictim
+swift run iphone-duo-prep audit SampleApps/NativeVictim
 ```
 
 Example output (abridged):
@@ -99,22 +99,22 @@ product-decision
 CI / gates:
 
 ```bash
-swift run duo-harness audit SampleApps/NativeVictim --format json > NativeVictim-report.json
-swift run duo-harness audit path/to/YourApp --fail-on blocker   # exit 2 if at/above severity
-swift run duo-harness audit path/to/YourApp --semantic          # drop comment/string false positives
+swift run iphone-duo-prep audit SampleApps/NativeVictim --format json > NativeVictim-report.json
+swift run iphone-duo-prep audit path/to/YourApp --fail-on blocker   # exit 2 if at/above severity
+swift run iphone-duo-prep audit path/to/YourApp --semantic          # drop comment/string false positives
 ```
 
 ### CLI
 
 ```text
-duo-harness version
-duo-harness sdk-check [--warn]
-duo-harness audit <path> [--format json|markdown] [--semantic] [--fail-on <severity>]
-duo-harness suggest <path>
-duo-harness report <path> --output <file> [--format json|markdown] [--semantic]
-duo-harness autofix <path> [--checklist]
-duo-harness matrix [--format markdown|args]
-duo-harness golden-diff <left.json> <right.json> [--left-label beta] [--right-label gm]
+iphone-duo-prep version
+iphone-duo-prep sdk-check [--warn]
+iphone-duo-prep audit <path> [--format json|markdown] [--semantic] [--fail-on <severity>]
+iphone-duo-prep suggest <path>
+iphone-duo-prep report <path> --output <file> [--format json|markdown] [--semantic]
+iphone-duo-prep autofix <path> [--checklist]
+iphone-duo-prep matrix [--format markdown|args]
+iphone-duo-prep golden-diff <left.json> <right.json> [--left-label beta] [--right-label gm]
 ```
 
 | Command | Use when |
@@ -141,7 +141,7 @@ if traitCollection.userInterfaceIdiom == .phone { /* … */ }
 Duo-aware:
 
 ```swift
-import DuoHarness
+import iPhoneDuoPrep
 
 let scale = DuoScreen.displayScale(from: traitCollection)
 let insets = DuoSafeArea.insets(from: view)   // keep top/bottom separate
@@ -163,7 +163,7 @@ Scaffold product decisions (not forced):
 ### Testing
 
 ```swift
-import DuoHarnessTesting
+import iPhoneDuoPrepTesting
 import Testing
 
 @Test(arguments: DuoUITestMatrix.entries)
@@ -173,17 +173,17 @@ func layoutFitsPreset(_ entry: DuoUITestMatrix.Entry) {
 ```
 
 ```bash
-swift run duo-harness matrix                  # markdown table
-swift run duo-harness matrix --format args    # Swift Testing argument lines
+swift run iphone-duo-prep matrix                  # markdown table
+swift run iphone-duo-prep matrix --format args    # Swift Testing argument lines
 ```
 
 ## Features
 
 | Layer | Role |
 | --- | --- |
-| **CLI (`duo-harness`)** | Scan a project tree → Markdown/JSON findings; mechanical autofix; CI gates |
-| **`DuoHarness` (SPM)** | Safe-area, screen, size-gate, hinge/reserved/Arrangement/scene/camera façades |
-| **`DuoHarnessTesting`** | Named Duo size presets + UI-test matrix dump |
+| **CLI (`iphone-duo-prep`)** | Scan a project tree → Markdown/JSON findings; mechanical autofix; CI gates |
+| **`iPhoneDuoPrep` (SPM)** | Safe-area, screen, size-gate, hinge/reserved/Arrangement/scene/camera façades |
+| **`iPhoneDuoPrepTesting`** | Named Duo size presets + UI-test matrix dump |
 | **Templates/** | Copy-paste stubs for scenes, Arrangement, outer accessory, camera direction |
 | **Adapters/** | Thin Flutter / React Native bridges |
 | **SampleApps/** | Intentional failures (`NativeVictim`) and dogfood hosts |
@@ -194,10 +194,10 @@ Autofix is mechanical only (today: `UIScreen.main.scale`). Camera findings are *
 ## Repository map
 
 ```text
-Sources/DuoHarness/          Runtime helpers (layout, scenes, hinge, camera façades)
-Sources/DuoHarnessTesting/   DuoDisplayPreset + DuoUITestMatrix
-Sources/DuoHarnessCLI/       Audit engine, autofix, semantic refine, gates
-Sources/duo-harness/         CLI executable
+Sources/iPhoneDuoPrep/          Runtime helpers (layout, scenes, hinge, camera façades)
+Sources/iPhoneDuoPrepTesting/   DuoDisplayPreset + DuoUITestMatrix
+Sources/iPhoneDuoPrepCLI/       Audit engine, autofix, semantic refine, gates
+Sources/iphone-duo-prep/         CLI executable
 Adapters/                    Flutter + React Native thin bridges
 Templates/                   Scene / Arrangement / OuterDisplay / Camera stubs
 SampleApps/NativeVictim/     Intentional audit failures (golden fixture)
@@ -218,8 +218,8 @@ When GM ships: dual goldens under `Tests/Goldens/gm/`, `golden-diff`, then flip 
 Flutter / React Native bridges under `Adapters/` mirror size / hinge / reserved helpers. Smoke hosts: `SampleApps/FlutterHost`, `SampleApps/RNHost`.
 
 ```bash
-swift run duo-harness audit SampleApps/FlutterHost
-swift run duo-harness audit SampleApps/RNHost
+swift run iphone-duo-prep audit SampleApps/FlutterHost
+swift run iphone-duo-prep audit SampleApps/RNHost
 ```
 
 Install notes + gap register: [Docs/ADAPTERS.md](./Docs/ADAPTERS.md).
@@ -248,9 +248,9 @@ Install notes + gap register: [Docs/ADAPTERS.md](./Docs/ADAPTERS.md).
 
 ## Contributing
 
-Questions and bugs: [GitHub Issues](https://github.com/nasibcode/duo-harness/issues). Pull requests are welcome.
+Questions and bugs: [GitHub Issues](https://github.com/nasibcode/iphone-duo-prep/issues). Pull requests are welcome.
 
-Use the pinned Xcode from [TOOLCHAIN.md](./TOOLCHAIN.md). Run `swift test` and `swift run duo-harness audit SampleApps/NativeVictim` before opening a PR. Keep camera / outer-display behavior as product decisions — do not add autofix for those rules.
+Use the pinned Xcode from [TOOLCHAIN.md](./TOOLCHAIN.md). Run `swift test` and `swift run iphone-duo-prep audit SampleApps/NativeVictim` before opening a PR. Keep camera / outer-display behavior as product decisions — do not add autofix for those rules.
 
 ## License
 

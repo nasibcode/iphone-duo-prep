@@ -1,6 +1,6 @@
-// Phase A2/A3/A4 — dogfood host linking DuoHarness + Testing.
-import DuoHarness
-import DuoHarnessTesting
+// Phase A2/A3/A4 — dogfood host linking iPhoneDuoPrep + Testing.
+import iPhoneDuoPrep
+import iPhoneDuoPrepTesting
 import Foundation
 
 #if canImport(UIKit)
@@ -11,7 +11,7 @@ import UIKit
 import SwiftUI
 #endif
 
-/// Dogfood host that links DuoHarness + DuoHarnessTesting (not an audit golden).
+/// Dogfood host that links iPhoneDuoPrep + iPhoneDuoPrepTesting (not an audit golden).
 public enum NativeHost {
     public static let linkedPresets = DuoDisplayPreset.allCases
 

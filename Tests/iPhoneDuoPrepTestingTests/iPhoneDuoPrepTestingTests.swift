@@ -1,8 +1,8 @@
-import DuoHarnessTesting
+import iPhoneDuoPrepTesting
 import Testing
 
 // Phase A2 presets; Phase A6 matrix.
-struct DuoHarnessTestingTests {
+struct iPhoneDuoPrepTestingTests {
     @Test func presetsHaveDistinctPositiveSizes() {
         let sizes = DuoDisplayPreset.allCases.map(\.size)
         #expect(sizes.count == 3)

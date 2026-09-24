@@ -1,8 +1,8 @@
 import CoreGraphics
-import DuoHarness
+import iPhoneDuoPrep
 import Testing
 
-struct DuoHarnessTests {
+struct iPhoneDuoPrepTests {
     @Test func safeAreaKeepsEdgesSeparate() {
         let insets = DuoSafeArea.insets(top: 47, left: 0, bottom: 34, right: 0)
         #expect(insets.top == 47)
