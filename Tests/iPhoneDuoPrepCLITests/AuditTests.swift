@@ -176,19 +176,50 @@ struct AuditTests {
             #expect(hit.lowerBound < likely.lowerBound)
         }
         #expect(!markdown.contains("## enhancement"))
-        #expect(report.findings.contains { $0.id == "R1.UIScreenMain" && $0.suggestion.contains("DuoScreen") })
-        #expect(report.findings.contains { $0.id == "R1.SafeAreaTimesTwo" && $0.suggestion.contains("DuoSafeArea") })
-        #expect(report.findings.contains { $0.id == "R3.UserInterfaceIdiom" && $0.suggestion.contains("DuoSizeGate") })
+        #expect(report.findings.contains { $0.id == "R1.UIScreenMain" && $0.suggestion.contains("DuoScreen.displayScale") })
+        #expect(report.findings.contains { $0.id == "R1.SafeAreaTimesTwo" && $0.suggestion.contains("DuoSafeArea.insets") })
+        #expect(report.findings.contains { $0.id == "R3.UserInterfaceIdiom" && $0.suggestion.contains("DuoSizeGate.isCompactWidth") })
         #expect(report.findings.contains {
-            $0.id == "R4.CustomChromeNoReserved" && $0.suggestion.contains("DuoReservedRegion")
-        })
-        #expect(report.findings.contains { $0.id == "R4.MissingHingeHook" && $0.suggestion.contains("DuoHinge") })
-        #expect(report.findings.contains {
-            $0.id == "R5.FrontCameraAsUser" && $0.suggestion.contains("DuoCameraDirection")
+            $0.id == "R4.CustomChromeNoReserved" && $0.suggestion.contains("Templates/Arrangement/")
+                && $0.suggestion.contains("does not")
         })
         #expect(report.findings.contains {
-            $0.id == "R5.CaptureWithoutOuterAccessory" && $0.suggestion.contains("DuoOuterAccessory")
+            $0.id == "R4.MissingHingeHook" && $0.suggestion.contains("Templates/Arrangement/")
+                && $0.suggestion.contains("does not")
         })
+        #expect(report.findings.contains {
+            $0.id == "R5.FrontCameraAsUser" && $0.suggestion.contains("Templates/Camera/")
+                && $0.suggestion.contains("does not")
+        })
+        #expect(report.findings.contains {
+            $0.id == "R5.CaptureWithoutOuterAccessory" && $0.suggestion.contains("Templates/OuterDisplay/")
+                && $0.suggestion.contains("does not")
+        })
+    }
+
+    @Test func xcodeDiagnosticsMapSeverity() {
+        let report = AuditReport(findings: [
+            Finding(id: "R2.MissingSceneManifest", severity: .blocker, file: "Info.plist", line: 1, message: "missing", suggestion: "Add it."),
+            Finding(id: "R1.UIScreenMain", severity: .likelyBug, file: "A.swift", line: 7, message: "main", suggestion: "Call DuoScreen.displayScale(from: traitCollection)."),
+            Finding(id: "R4.MissingHingeHook", severity: .productDecision, file: "A.swift", line: 8, message: "hinge", suggestion: "See Templates/Arrangement/."),
+            Finding(id: "R6.MissingAdapter", severity: .enhancement, file: "a.dart", line: 2, message: "adapter", suggestion: "See Docs/ADAPTERS.md."),
+        ])
+        let text = Audit.xcodeDiagnostics(report, root: URL(fileURLWithPath: "/tmp/App"))
+        #expect(text.contains("/tmp/App/Info.plist:1:1: error: missing [R2.MissingSceneManifest]"))
+        #expect(text.contains("/tmp/App/A.swift:7:1: warning: main [R1.UIScreenMain]"))
+        #expect(text.contains("/tmp/App/A.swift:8:1: warning: hinge [R4.MissingHingeHook]"))
+        #expect(text.contains("/tmp/App/a.dart:2:1: note: adapter [R6.MissingAdapter]"))
+    }
+
+    @Test func fileListDoesNotInventMissingPlist() throws {
+        let dir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let file = dir.appendingPathComponent("A.swift")
+        try "let s = UIScreen.main.bounds\n".write(to: file, atomically: true, encoding: .utf8)
+        let report = Audit.scan(files: [file])
+        #expect(!report.findings.contains { $0.id == "R2.MissingSceneManifest" })
+        #expect(report.findings.contains { $0.id == "R1.UIScreenMain" && $0.file == file.standardizedFileURL.path })
     }
 
     @Test func autofixReplacesMainScale() throws {

@@ -7,8 +7,8 @@ Duo breaks the phone assumption that **front camera = person using this UI**. Ou
 
 | Topic | Guidance |
 | --- | --- |
-| Who faces whom | Use `DuoCameraDirection` / `Templates/Camera/` instead of assuming `.front` faces the current UI user. |
-| Outer preview | Only register accessories (`DuoOuterAccessory` / `Templates/OuterDisplay/`) when the product wants capture or preview on the outer display. |
+| Who faces whom | Copy `Templates/Camera/`. `DuoCameraDirection` compiles and does not change capture yet. |
+| Outer preview | Copy `Templates/OuterDisplay/` only if the product wants outer capture or preview. `DuoOuterAccessory` does not change capture yet. |
 | Autofix | **None.** Camera findings are `product-decision` only — never forced by `iphone-duo-prep autofix`. |
 
 ## Scaffold path (&lt; 30 min)

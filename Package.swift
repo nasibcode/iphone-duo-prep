@@ -14,6 +14,7 @@ let package = Package(
         .library(name: "iPhoneDuoPrepTesting", targets: ["iPhoneDuoPrepTesting"]),
         .library(name: "NativeHost", targets: ["NativeHost"]),
         .executable(name: "iphone-duo-prep", targets: ["iphone-duo-prep"]),
+        .plugin(name: "iPhoneDuoPrepBuildTool", targets: ["iPhoneDuoPrepBuildTool"]),
     ],
     targets: [
         .target(name: "iPhoneDuoPrep"), // Phase A2 + A3
@@ -21,12 +22,18 @@ let package = Package(
         .target(
             name: "NativeHost", // Phase A2/A3/A4 demos
             dependencies: ["iPhoneDuoPrep", "iPhoneDuoPrepTesting"],
-            path: "SampleApps/NativeHost"
+            path: "SampleApps/NativeHost",
+            plugins: ["iPhoneDuoPrepBuildTool"]
         ),
         .target(name: "iPhoneDuoPrepCLI", dependencies: ["iPhoneDuoPrep"]), // Phase A1–A7 CLI
         .executableTarget(
             name: "iphone-duo-prep",
             dependencies: ["iPhoneDuoPrepCLI", "iPhoneDuoPrepTesting"] // A6 matrix subcommand
+        ),
+        .plugin(
+            name: "iPhoneDuoPrepBuildTool",
+            capability: .buildTool(),
+            dependencies: ["iphone-duo-prep"]
         ),
         .testTarget(name: "iPhoneDuoPrepTests", dependencies: ["iPhoneDuoPrep"]),
         .testTarget(name: "iPhoneDuoPrepTestingTests", dependencies: ["iPhoneDuoPrepTesting"]),

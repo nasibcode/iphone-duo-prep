@@ -30,6 +30,26 @@ struct AutomationTests {
         #expect(!refined.findings.contains { $0.id == "R1.UIScreenMain" })
     }
 
+    @Test func semanticRefineReadsAbsoluteFindingPath() throws {
+        let dir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let file = dir.appendingPathComponent("Note.swift")
+        try "// UIScreen.main is mentioned only in a comment\n".write(to: file, atomically: true, encoding: .utf8)
+        let raw = AuditReport(findings: [
+            Finding(
+                id: "R1.UIScreenMain",
+                severity: .likelyBug,
+                file: file.standardizedFileURL.path,
+                line: 1,
+                message: "m",
+                suggestion: "s"
+            ),
+        ])
+        let refined = Semantic.refine(raw, root: URL(fileURLWithPath: "/unused"))
+        #expect(refined.findings.isEmpty)
+    }
+
     @Test func severityGateRanks() {
         let report = AuditReport(findings: [
             Finding(

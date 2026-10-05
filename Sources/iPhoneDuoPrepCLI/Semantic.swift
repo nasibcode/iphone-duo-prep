@@ -9,7 +9,9 @@ public enum Semantic {
             guard finding.id.hasPrefix("R1.") || finding.id.hasPrefix("R2.") || finding.id.hasPrefix("R3.")
             else { return true }
             guard finding.line > 0 else { return true }
-            let url = root.appendingPathComponent(finding.file)
+            let url = finding.file.hasPrefix("/")
+                ? URL(fileURLWithPath: finding.file)
+                : root.appendingPathComponent(finding.file)
             guard let text = try? String(contentsOf: url, encoding: .utf8) else { return true }
             let lines = text.components(separatedBy: "\n")
             guard finding.line <= lines.count else { return true }

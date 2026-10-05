@@ -53,3 +53,5 @@ swift run iphone-duo-prep golden-diff Tests/Goldens/beta/NativeVictim.json Tests
 .product(name: "iPhoneDuoPrep", package: "iphone-duo-prep")
 .product(name: "iPhoneDuoPrepTesting", package: "iphone-duo-prep")
 ```
+
+Xcode app: add the package, then Build Phases → Run Build Tool Plug-ins → `iPhoneDuoPrepBuildTool`. Link `iPhoneDuoPrep` only if the app calls the helpers. See [README](./README.md#xcode).

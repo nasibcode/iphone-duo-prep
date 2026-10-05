@@ -52,10 +52,14 @@ public enum Audit {
                     }
                     continue
                 }
-                findings += scanFile(item, root: root, sawInfoPlist: &sawInfoPlist)
+                findings += scanFile(item, displayPath: relative(item, to: root), sawInfoPlist: &sawInfoPlist)
             }
         } else {
-            findings += scanFile(root, root: root.deletingLastPathComponent(), sawInfoPlist: &sawInfoPlist)
+            findings += scanFile(
+                root,
+                displayPath: relative(root, to: root.deletingLastPathComponent()),
+                sawInfoPlist: &sawInfoPlist
+            )
         }
 
         if !sawInfoPlist {
@@ -63,6 +67,21 @@ public enum Audit {
             findings.append(sceneManifest(file: file, message: "No Info.plist with UIApplicationSceneManifest."))
         }
 
+        return AuditReport(findings: sorted(findings))
+    }
+
+    /// Scan an explicit file list. Paths in findings are absolute. Does not invent a missing Info.plist.
+    public static func scan(files: [URL]) -> AuditReport {
+        var findings: [Finding] = []
+        var sawInfoPlist = false
+        for url in files {
+            let file = url.standardizedFileURL
+            var isDirectory: ObjCBool = false
+            guard FileManager.default.fileExists(atPath: file.path, isDirectory: &isDirectory),
+                  !isDirectory.boolValue,
+                  FileManager.default.isReadableFile(atPath: file.path) else { continue }
+            findings += scanFile(file, displayPath: file.path, sawInfoPlist: &sawInfoPlist)
+        }
         return AuditReport(findings: sorted(findings))
     }
 
@@ -99,6 +118,22 @@ public enum Audit {
         return lines.joined(separator: "\n")
     }
 
+    /// Clang/Xcode diagnostic lines. `blocker` is `error`, `enhancement` is `note`, the rest are `warning`.
+    public static func xcodeDiagnostics(_ report: AuditReport, root: URL) -> String {
+        let lines = report.findings.map { finding -> String in
+            let path = finding.file.hasPrefix("/") ? finding.file : absolute(finding.file, root: root)
+            let kind: String
+            switch finding.severity {
+            case .blocker: kind = "error"
+            case .enhancement: kind = "note"
+            case .likelyBug, .productDecision: kind = "warning"
+            }
+            return "\(path):\(finding.line):1: \(kind): \(finding.message) [\(finding.id)] \(finding.suggestion)"
+        }
+        guard !lines.isEmpty else { return "" }
+        return lines.joined(separator: "\n") + "\n"
+    }
+
     private static let skipDirectories: Set<String> = [
         ".git", ".build", "DerivedData", "Pods", "node_modules", "checkouts", "android",
     ]
@@ -106,25 +141,24 @@ public enum Audit {
         "swift", "m", "mm", "h", "dart", "ts", "tsx", "js", "jsx",
     ]
 
-    private static func scanFile(_ url: URL, root: URL, sawInfoPlist: inout Bool) -> [Finding] {
-        let relativePath = relative(url, to: root)
+    private static func scanFile(_ url: URL, displayPath: String, sawInfoPlist: inout Bool) -> [Finding] {
         let ext = url.pathExtension.lowercased()
         if ext == "plist" {
             return scanPlist(
                 url,
-                file: relativePath,
+                file: displayPath,
                 isInfo: url.lastPathComponent == "Info.plist",
                 sawInfoPlist: &sawInfoPlist
             )
         }
         if ext == "pbxproj" {
-            return scanPbxproj(url, file: relativePath)
+            return scanPbxproj(url, file: displayPath)
         }
         if ext == "storyboard" || ext == "xib" {
-            return scanInterface(url, file: relativePath)
+            return scanInterface(url, file: displayPath)
         }
         if lineExtensions.contains(ext) {
-            return scanLines(url, file: relativePath)
+            return scanLines(url, file: displayPath)
         }
         return []
     }
@@ -144,7 +178,7 @@ public enum Audit {
             findings.append(make(
                 "R1.UIScreenMain", .likelyBug, file, lineNumber,
                 "UIScreen.main does not track the window's screen.",
-                "Use DuoScreen for the window scene's screen; use traitCollection.displayScale for scale."
+                "Call DuoScreen.displayScale(from: traitCollection), or DuoScreen.screen(for: view) instead of UIScreen.main."
             ))
         }
         if line.contains("safeAreaInsets"),
@@ -152,7 +186,7 @@ public enum Audit {
             findings.append(make(
                 "R1.SafeAreaTimesTwo", .likelyBug, file, lineNumber,
                 "safeAreaInsets are combined symmetrically.",
-                "Use DuoSafeArea; keep top and bottom insets separate."
+                "Call DuoSafeArea.insets(from: view) and keep top and bottom separate."
             ))
         }
         if line.contains(/CGRect\s*\(\s*x:\s*-?\d+.*width:\s*-?\d+.*height:\s*-?\d+/) {
@@ -180,7 +214,7 @@ public enum Audit {
             findings.append(make(
                 "R3.UserInterfaceIdiom", .likelyBug, file, lineNumber,
                 "Layout branches on userInterfaceIdiom.",
-                "Use DuoSizeGate on container size, not phone/pad idiom."
+                "Call DuoSizeGate.isCompactWidth(view.bounds.size) instead of userInterfaceIdiom."
             ))
         }
         if orientation(line) {
@@ -194,28 +228,28 @@ public enum Audit {
             findings.append(make(
                 "R4.CustomChromeNoReserved", .productDecision, file, lineNumber,
                 "Custom chrome may span the fold without reserved-region awareness.",
-                "Use DuoReservedRegion for fold-safe chrome; see Templates/Arrangement/."
+                "Product decision: see Templates/Arrangement/. DuoReservedRegion does not change layout yet."
             ))
         }
         if missingHingeHook(line) {
             findings.append(make(
                 "R4.MissingHingeHook", .productDecision, file, lineNumber,
-                "Fold/hinge pose is used without a DuoHinge hook.",
-                "Observe via DuoHinge; see Templates/Arrangement/."
+                "Fold or hinge pose is used without a product decision.",
+                "Product decision: see Templates/Arrangement/. DuoHinge does not observe a real hinge yet."
             ))
         }
         if frontCameraAsUser(line) {
             findings.append(make(
                 "R5.FrontCameraAsUser", .productDecision, file, lineNumber,
                 "Front camera is assumed to face the user of this UI.",
-                "Use DuoCameraDirection; see Templates/Camera/ and Docs/CAMERA.md."
+                "Product decision: see Templates/Camera/ and Docs/CAMERA.md. DuoCameraDirection does not change capture yet."
             ))
         }
         if captureWithoutOuterAccessory(line) {
             findings.append(make(
                 "R5.CaptureWithoutOuterAccessory", .productDecision, file, lineNumber,
                 "Capture/preview mentions outer display without accessory scaffolding.",
-                "Use DuoOuterAccessory; see Templates/OuterDisplay/ and Docs/CAMERA.md."
+                "Product decision: see Templates/OuterDisplay/ and Docs/CAMERA.md. DuoOuterAccessory does not change capture yet."
             ))
         }
         if fixedMediaQuery(line) {
@@ -429,6 +463,12 @@ public enum Audit {
         _ suggestion: String
     ) -> Finding {
         Finding(id: id, severity: severity, file: file, line: line, message: message, suggestion: suggestion)
+    }
+
+    private static func absolute(_ relativePath: String, root: URL) -> String {
+        let root = root.standardizedFileURL
+        if relativePath == "." { return root.path }
+        return root.appendingPathComponent(relativePath).path
     }
 
     private static func relative(_ file: URL, to root: URL) -> String {

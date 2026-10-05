@@ -38,7 +38,7 @@
       "line" : 7,
       "message" : "UIScreen.main does not track the window's screen.",
       "severity" : "likely-bug",
-      "suggestion" : "Use DuoScreen for the window scene's screen; use traitCollection.displayScale for scale."
+      "suggestion" : "Call DuoScreen.displayScale(from: traitCollection), or DuoScreen.screen(for: view) instead of UIScreen.main."
     },
     {
       "file" : "VictimViewController.swift",
@@ -46,7 +46,7 @@
       "line" : 8,
       "message" : "safeAreaInsets are combined symmetrically.",
       "severity" : "likely-bug",
-      "suggestion" : "Use DuoSafeArea; keep top and bottom insets separate."
+      "suggestion" : "Call DuoSafeArea.insets(from: view) and keep top and bottom separate."
     },
     {
       "file" : "VictimViewController.swift",
@@ -70,7 +70,7 @@
       "line" : 11,
       "message" : "Layout branches on userInterfaceIdiom.",
       "severity" : "likely-bug",
-      "suggestion" : "Use DuoSizeGate on container size, not phone/pad idiom."
+      "suggestion" : "Call DuoSizeGate.isCompactWidth(view.bounds.size) instead of userInterfaceIdiom."
     },
     {
       "file" : "VictimViewController.swift",
@@ -86,15 +86,15 @@
       "line" : 13,
       "message" : "Custom chrome may span the fold without reserved-region awareness.",
       "severity" : "product-decision",
-      "suggestion" : "Use DuoReservedRegion for fold-safe chrome; see Templates/Arrangement/."
+      "suggestion" : "Product decision: see Templates/Arrangement/. DuoReservedRegion does not change layout yet."
     },
     {
       "file" : "VictimViewController.swift",
       "id" : "R4.MissingHingeHook",
       "line" : 14,
-      "message" : "Fold/hinge pose is used without a DuoHinge hook.",
+      "message" : "Fold or hinge pose is used without a product decision.",
       "severity" : "product-decision",
-      "suggestion" : "Observe via DuoHinge; see Templates/Arrangement/."
+      "suggestion" : "Product decision: see Templates/Arrangement/. DuoHinge does not observe a real hinge yet."
     },
     {
       "file" : "VictimViewController.swift",
@@ -102,7 +102,7 @@
       "line" : 15,
       "message" : "Front camera is assumed to face the user of this UI.",
       "severity" : "product-decision",
-      "suggestion" : "Use DuoCameraDirection; see Templates/Camera/ and Docs/CAMERA.md."
+      "suggestion" : "Product decision: see Templates/Camera/ and Docs/CAMERA.md. DuoCameraDirection does not change capture yet."
     },
     {
       "file" : "VictimViewController.swift",
@@ -110,7 +110,7 @@
       "line" : 16,
       "message" : "Capture/preview mentions outer display without accessory scaffolding.",
       "severity" : "product-decision",
-      "suggestion" : "Use DuoOuterAccessory; see Templates/OuterDisplay/ and Docs/CAMERA.md."
+      "suggestion" : "Product decision: see Templates/OuterDisplay/ and Docs/CAMERA.md. DuoOuterAccessory does not change capture yet."
     }
   ]
 }

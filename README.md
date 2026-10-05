@@ -69,6 +69,18 @@ swift run iphone-duo-prep sdk-check
 .product(name: "iPhoneDuoPrepTesting", package: "iphone-duo-prep")
 ```
 
+### Xcode
+
+The plugin is not linked into the app.
+
+1. File → Add Package Dependencies → `https://github.com/nasibcode/iphone-duo-prep.git`
+2. On the app target: Build Phases → Run Build Tool Plug-ins → **iPhoneDuoPrepBuildTool**. Trust the plugin on the first build.
+3. To call the helpers, also link the **iPhoneDuoPrep** library. That step is separate from the plugin.
+
+`blocker` findings are errors and fail the build. `likely-bug` and `product-decision` are warnings. CI: `xcodebuild` with `-skipPackagePluginValidation`.
+
+Docs: [SwiftPM — Writing a build tool plugin](https://docs.swift.org/latest/documentation/packagemanagerdocs/writingbuildtoolplugin/).
+
 ## Usage
 
 First win: audit `SampleApps/NativeVictim` (intentional Duo anti-patterns).
@@ -92,8 +104,8 @@ likely-bug
 …
 
 product-decision
-- R4.CustomChromeNoReserved … Use DuoReservedRegion; see Templates/Arrangement/.
-- R5.FrontCameraAsUser … Use DuoCameraDirection; see Docs/CAMERA.md.
+- R4.CustomChromeNoReserved … Product decision: see Templates/Arrangement/.
+- R5.FrontCameraAsUser … Product decision: see Templates/Camera/ and Docs/CAMERA.md.
 ```
 
 CI / gates:
@@ -109,7 +121,8 @@ swift run iphone-duo-prep audit path/to/YourApp --semantic          # drop comme
 ```text
 iphone-duo-prep version
 iphone-duo-prep sdk-check [--warn]
-iphone-duo-prep audit <path> [--format json|markdown] [--semantic] [--fail-on <severity>]
+iphone-duo-prep audit <path> [--format json|markdown|xcode] [--semantic] [--fail-on <severity>]
+iphone-duo-prep audit --files <file>... [--format json|markdown|xcode] [--semantic] [--fail-on <severity>]
 iphone-duo-prep suggest <path>
 iphone-duo-prep report <path> --output <file> [--format json|markdown] [--semantic]
 iphone-duo-prep autofix <path> [--checklist]
@@ -119,7 +132,8 @@ iphone-duo-prep golden-diff <left.json> <right.json> [--left-label beta] [--righ
 
 | Command | Use when |
 | --- | --- |
-| `audit` | Local or CI backlog |
+| `audit` | Local or CI backlog. `--format xcode` prints `file:line:1: error:` / `warning:` |
+| `audit --files` | One target’s files (what the build-tool plugin passes) |
 | `suggest` | Same as markdown audit |
 | `report` | Write an artifact to disk |
 | `autofix` | Mechanical `UIScreen.main.scale` → `traitCollection.displayScale` |
@@ -146,9 +160,6 @@ import iPhoneDuoPrep
 let scale = DuoScreen.displayScale(from: traitCollection)
 let insets = DuoSafeArea.insets(from: view)   // keep top/bottom separate
 if DuoSizeGate.isCompactWidth(view.bounds.size) { /* … */ }
-
-let reserved = DuoReservedRegion.layoutGuideInsets(for: view)
-_ = DuoHinge.observe { fraction in /* … */ }
 ```
 
 Scaffold product decisions (not forced):
@@ -181,7 +192,8 @@ swift run iphone-duo-prep matrix --format args    # Swift Testing argument lines
 
 | Layer | Role |
 | --- | --- |
-| **CLI (`iphone-duo-prep`)** | Scan a project tree → Markdown/JSON findings; mechanical autofix; CI gates |
+| **CLI (`iphone-duo-prep`)** | Scan a project tree → Markdown/JSON/Xcode findings; mechanical autofix; CI gates |
+| **`iPhoneDuoPrepBuildTool`** | Build-tool plugin. Same findings on each Xcode build. Not linked into the app |
 | **`iPhoneDuoPrep` (SPM)** | Safe-area, screen, size-gate, hinge/reserved/Arrangement/scene/camera façades |
 | **`iPhoneDuoPrepTesting`** | Named Duo size presets + UI-test matrix dump |
 | **Templates/** | Copy-paste stubs for scenes, Arrangement, outer accessory, camera direction |
@@ -198,6 +210,7 @@ Sources/iPhoneDuoPrep/          Runtime helpers (layout, scenes, hinge, camera f
 Sources/iPhoneDuoPrepTesting/   DuoDisplayPreset + DuoUITestMatrix
 Sources/iPhoneDuoPrepCLI/       Audit engine, autofix, semantic refine, gates
 Sources/iphone-duo-prep/         CLI executable
+Plugins/iPhoneDuoPrepBuildTool/  Xcode / SwiftPM build-tool plugin
 Adapters/                    Flutter + React Native thin bridges
 Templates/                   Scene / Arrangement / OuterDisplay / Camera stubs
 SampleApps/NativeVictim/     Intentional audit failures (golden fixture)
@@ -242,6 +255,7 @@ Install notes + gap register: [Docs/ADAPTERS.md](./Docs/ADAPTERS.md).
 | [Docs/ADAPTERS.md](./Docs/ADAPTERS.md) | Flutter / RN install + gap register |
 | [Docs/toolchain-legacy/BETA.md](./Docs/toolchain-legacy/BETA.md) | Archived beta pin |
 | [plan.md](./plan.md) | Delivery plan (phases A0–A7) |
+| [AGENTS.md](./AGENTS.md) | Agent loop: fix blockers and likely-bugs; ask on product decisions |
 | [analysis.md](./analysis.md) | Feasibility and automation boundary |
 
 **Status:** Phases A0–A7 implemented. Pin remains Xcode 27.1 beta until GM; `Tests/Goldens/gm/` are placeholders until then.
